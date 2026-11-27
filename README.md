@@ -36,13 +36,10 @@ jobs:
         with:
           server-command: node dist/server.js
           url: ws://127.0.0.1:9001
-
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: autobahn-report
-          path: autobahn-reports
 ```
+
+The report is uploaded as the `autobahn-report` artifact automatically, even
+when the protocol gate fails.
 
 The action will start the server, wait for a WebSocket handshake, run the
 digest-pinned Autobahn container, parse `servers/index.json`, write JSON and
@@ -51,35 +48,42 @@ and fail according to the configured policy.
 
 ## Planned Inputs
 
-| Input                      | Default               | Purpose                                 |
-| -------------------------- | --------------------- | --------------------------------------- |
-| `url`                      | `ws://127.0.0.1:9001` | WebSocket target                        |
-| `server-command`           | empty                 | Optional command that starts the server |
-| `server-working-directory` | `.`                   | Working directory for the command       |
-| `server-ready-timeout`     | `30`                  | Seconds to wait for a handshake         |
-| `cases`                    | `*`                   | Comma- or space-separated case patterns |
-| `exclude-cases`            | empty                 | Case patterns to skip                   |
-| `agent`                    | `autobahn-action`     | Agent key in the report                 |
-| `report-dir`               | `autobahn-reports`    | Report, summary, and Markdown output    |
-| `docker-image`             | pinned digest         | Autobahn testsuite image                |
-| `docker-network`           | `auto`                | `auto`, `host`, or `bridge`             |
-| `timeout`                  | `1800`                | Seconds allowed for the container       |
-| `fail-on`                  | `failed`              | `failed`, `non-strict`, or `never`      |
-| `summary`                  | `true`                | Append the report to the step summary   |
-| `annotate`                 | `true`                | Annotate failed cases in the log        |
+| Input                      | Default               | Purpose                                   |
+| -------------------------- | --------------------- | ----------------------------------------- |
+| `url`                      | `ws://127.0.0.1:9001` | WebSocket target                          |
+| `server-command`           | empty                 | Optional command that starts the server   |
+| `server-working-directory` | `.`                   | Working directory for the command         |
+| `server-ready-timeout`     | `30`                  | Seconds to wait for a handshake           |
+| `cases`                    | `*`                   | Comma- or space-separated case patterns   |
+| `exclude-cases`            | empty                 | Case patterns to skip                     |
+| `agent`                    | `autobahn-action`     | Agent key in the report                   |
+| `report-dir`               | `autobahn-reports`    | Report, summary, and Markdown output      |
+| `docker-image`             | pinned digest         | Autobahn testsuite image                  |
+| `docker-network`           | `auto`                | `auto`, `host`, or `bridge`               |
+| `timeout`                  | `1800`                | Seconds allowed for the container         |
+| `fail-on`                  | `failed`              | `failed`, `non-strict`, or `never`        |
+| `summary`                  | `true`                | Append the report to the step summary     |
+| `annotate`                 | `true`                | Annotate failed cases in the log          |
+| `upload-artifact`          | `true`                | Upload the report as a workflow artifact  |
+| `artifact-name`            | `autobahn-report`     | Artifact name; unique per run             |
+| `retention-days`           | `30`                  | Artifact retention; `0` uses repo default |
 
 ## Planned Outputs
 
 `ok`, `outcome`, `total`, `passed`, `failed`, `non-strict`, `informational`,
-`policy`, `report-dir`, `index-path`, `summary-path`, and `markdown-path`.
+`policy`, `report-dir`, `index-path`, `summary-path`, `markdown-path`,
+`artifact-id`, `artifact-url`, `artifact-size`, and `artifact-digest`.
 
 ## Design Notes
 
-Runtime choices: `@actions/core` for the runner interface, `zod` for untrusted
-report decoding, `node:child_process` for explicit subprocess control,
-`node:test` for tests, and esbuild for the committed bundle. There is no
-`@actions/exec`, no `@actions/artifact`, and no `@vercel/ncc`. See
-[docs/adr/0002-action-runtime-toolchain.md](docs/adr/0002-action-runtime-toolchain.md).
+Runtime choices: `@actions/core` for the runner interface, `@actions/artifact`
+for automatic report upload, `zod` for untrusted report decoding,
+`node:child_process` for explicit subprocess control, `node:test` for tests,
+and esbuild for the committed bundle. There is no `@actions/exec` and no
+`@vercel/ncc`. See
+[docs/adr/0002-action-runtime-toolchain.md](docs/adr/0002-action-runtime-toolchain.md)
+and
+[docs/adr/0003-automatic-report-artifact-upload.md](docs/adr/0003-automatic-report-artifact-upload.md).
 
 The harness takes its shape from
 [fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js):

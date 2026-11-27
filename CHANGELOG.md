@@ -29,7 +29,10 @@ All notable changes to this project are documented here. The format follows
   decision.
 - ADR 0002 recording the action runtime toolchain: `@actions/core` and `zod`
   as dependencies, direct `node:child_process`, `node:test`, esbuild, and no
-  `@actions/exec`, `@actions/artifact`, or `@vercel/ncc`.
+  `@actions/exec` or `@vercel/ncc`.
+- `@actions/core` 3.0.1 and `@actions/artifact` 6.3.1 as runtime dependencies.
+- ADR 0003 defining automatic report upload, artifact naming, retention,
+  outputs, GHES fallback, and failure behavior.
 
 ### Notes
 
