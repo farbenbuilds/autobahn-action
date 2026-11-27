@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/setup@v2
+      - uses: pnpm/setup@v3
         with:
           version: 12.4.2
           runtime: node@24.22.1
