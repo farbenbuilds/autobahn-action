@@ -7,8 +7,10 @@ coverage/
 # generated reports
 autobahn-reports/
 
-# nix
+# nix/direnv
 .direnv/
+.envrc.cache
+.envrc.local
 result
 
 # graphify

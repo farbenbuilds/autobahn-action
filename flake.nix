@@ -2,6 +2,8 @@
   description = "autobahn-action / Autobahn WebSocket testsuite as a GitHub Action";
 
   inputs = {
+    # Keep this lock aligned with the sibling ventiws flake so a musl host
+    # reuses the Node and pnpm store paths instead of rebuilding them.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
@@ -29,16 +31,13 @@
           then pkgsMusl.callPackage ./nix/pnpm.nix {}
           else null;
 
-        mkDevShell = packagePkgs: pnpmPackage:
+        # `nodejs` rather than `nodejs_24` matches the sibling ventiws pin and
+        # its cached musl build. The shared pin carries 24.21.0, which predates
+        # the October 2026 security release; CI uses 24.22.1 until nixpkgs
+        # carries a cached musl build of the fixed release.
+        mkDevShell = packagePkgs: pnpmPackage: extraPackages:
           packagePkgs.mkShell {
-            packages = [
-              packagePkgs.nodejs_24
-              packagePkgs.typescript
-              packagePkgs.typescript-language-server
-              packagePkgs.ripgrep
-              packagePkgs.alejandra
-              pnpmPackage
-            ];
+            packages = [packagePkgs.nodejs pnpmPackage] ++ extraPackages;
             shellHook = ''
               echo "autobahn-action dev shell: node $(node --version), pnpm $(pnpm --version)"
             '';
@@ -48,10 +47,18 @@
 
         devShells =
           {
-            default = mkDevShell pkgs pnpm;
+            default = mkDevShell pkgs pnpm [
+              pkgs.typescript
+              pkgs.typescript-language-server
+              pkgs.ripgrep
+              pkgs.alejandra
+            ];
           }
           // lib.optionalAttrs isLinux {
-            musl = mkDevShell pkgsMusl pnpmMusl;
+            # Keep the musl shell to the cached Node and pnpm closure. The extra
+            # glibc host tools are not runnable there and would force a full
+            # musl bootstrap to build.
+            musl = mkDevShell pkgsMusl pnpmMusl [];
           };
 
         checks.format =
