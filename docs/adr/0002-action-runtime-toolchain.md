@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted on 2026-11-28.
+Accepted on 2026-11-28. Amended by
+[ADR 0003](0003-automatic-report-artifact-upload.md): `@actions/artifact` is
+now a planned runtime dependency.
 
 ## Context
 
@@ -12,7 +14,8 @@ and ship as a single committed entry point. The implementation is deliberately
 deferred, but the dependency choices affect the module layout, the security
 boundary, and the release process.
 
-The setup currently has no runtime dependency.
+The setup originally had no runtime dependency. ADR 0003 adds
+`@actions/artifact`; the other decisions here still apply.
 
 ## Decision
 
@@ -39,15 +42,12 @@ removal on timeout. `@actions/exec` wraps output buffering and shell escaping
 that the action does not want, and it does not own those lifecycle concerns.
 `spawn` and `spawnSync` with explicit argument arrays are smaller and clearer.
 
-### @actions/artifact: no, for now
+### @actions/artifact: originally no, now yes
 
-Consumers upload `autobahn-reports` with `actions/upload-artifact` in their
-workflow. The action writes the report and returns its path. Adding artifact
-upload would couple the action to the Actions artifact runtime and its token
-environment without changing the test result.
-
-Revisit this when a one-step experience without a consumer upload step becomes
-a requirement.
+The original decision kept artifact upload in the consumer's workflow. ADR
+0003 replaces that part: the action uploads the report itself so a consumer
+gets a downloadable result without a second step. See
+[ADR 0003](0003-automatic-report-artifact-upload.md).
 
 ### @vercel/ncc: no
 
@@ -81,9 +81,9 @@ is a runtime dependency.
 
 ## Consequences
 
-- Runtime dependencies stay at two packages: `@actions/core` and `zod`.
-- `@actions/exec`, `@actions/artifact`, and `@vercel/ncc` stay out of the tree
-  until a documented requirement proves one is necessary.
+- Runtime dependencies are `@actions/core`, `@actions/artifact`, and `zod`.
+- `@actions/exec` and `@vercel/ncc` stay out of the tree until a documented
+  requirement proves one is necessary.
 - All subprocess calls use explicit argument arrays and explicit timeouts.
 - The committed bundle is verified by rebuilding and diffing in CI.
 - Reviewers hold the bundle to generated-output rules, not source-file rules.

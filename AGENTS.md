@@ -181,4 +181,6 @@ Refresh with `sh scripts/install-graphify-integrations.sh` and verify with
   case set under the gate.
 - The action needs `contents: read` only. It never publishes, tags, or writes
   to the repository.
+- Artifact upload uses the runner-provided runtime token. Never log that token,
+  and never follow a symlink while collecting report files.
 - Never print secrets. Redact tokens and authorization headers.

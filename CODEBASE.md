@@ -52,6 +52,8 @@ src/
     classify.ts               tolerate, classify, count, apply policy
     format-summary.ts         render Markdown
     write-report.ts           persist JSON, Markdown, and step summary
+  artifact/
+    upload-report.ts          enumerate regular files and upload one artifact
 tests/
   report/                     parser, classifier, and renderer tests
   suite/                      config, URL mapping, and argument tests
@@ -65,10 +67,12 @@ dist/
   index.cjs                   committed CommonJS release bundle
 ```
 
-Runtime dependencies are `@actions/core` for the runner interface and `zod`
-for boundary decoding. Subprocesses use `node:child_process` directly; tests
-use `node:test`. The bundler is esbuild, not `@vercel/ncc`. The reasoning is in
-[ADR 0002](docs/adr/0002-action-runtime-toolchain.md).
+Runtime dependencies are `@actions/core` for the runner interface,
+`@actions/artifact` for report upload, and `zod` for boundary decoding.
+Subprocesses use `node:child_process` directly; tests use `node:test`. The
+bundler is esbuild, not `@vercel/ncc`. The reasoning is in
+[ADR 0002](docs/adr/0002-action-runtime-toolchain.md) and
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md).
 
 Every module stays below 500 lines. Split by responsibility, not by line
 count, and never add a numbered continuation file.
@@ -88,6 +92,7 @@ action.yml
        -> report/classify        outcomes, counts, policy
        -> report/format-summary  Markdown
        -> report/write-report    JSON, Markdown, step summary
+       -> artifact/upload        @actions/artifact report archive
   -> action/outputs.ts           GitHub outputs
 ```
 
@@ -115,6 +120,14 @@ classification, and rendering stay pure so they are testable without Docker.
   or readiness error.
 - The Markdown report is appended to `GITHUB_STEP_SUMMARY` only when the
   summary input is enabled and the path exists.
+- The report directory is uploaded as one immutable artifact after the summary
+  is written, including when the policy fails. The upload is skipped with a
+  warning outside Actions or on GHES, where the v2 artifact backend is not
+  available.
+- Artifact names must be unique in a workflow run. Matrix consumers override
+  the default `autobahn-report` name per job.
+- An artifact upload failure is a warning in the summary; it never rewrites
+  the protocol result.
 
 ## External Contracts
 

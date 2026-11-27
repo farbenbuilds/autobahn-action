@@ -17,6 +17,10 @@
     "check:skills": "node scripts/check-skills-lock.mjs",
     "check:agents": "sh scripts/check-agent-parity.sh"
   },
+  "dependencies": {
+    "@actions/artifact": "6.3.1",
+    "@actions/core": "3.0.1"
+  },
   "devDependencies": {
     "@oxlint/plugins": "1.95.0",
     "@types/node": "24.19.2",

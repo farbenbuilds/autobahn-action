@@ -49,6 +49,16 @@ binary is a development tool and is not distributed with this repository.
 
 ## Runtime Dependencies
 
-Runtime dependencies will be listed in `package.json` and their licenses in
-this file when the action implementation lands. At present the repository has
-no runtime dependency.
+| Package             | Version | License | Purpose                                       |
+| ------------------- | ------- | ------- | --------------------------------------------- |
+| `@actions/core`     | 3.0.1   | MIT     | Runner inputs, outputs, logging, step summary |
+| `@actions/artifact` | 6.3.1   | MIT     | Upload the report as an Actions artifact      |
+| `zod`               | planned | MIT     | Decode the untrusted report at the boundary   |
+
+`@actions/artifact` brings transitive dependencies for the artifact backend,
+including the Actions HTTP client, Octokit, and the Azure Blob Storage client.
+Their licenses are recorded in `pnpm-lock.yaml` and remain upstream MIT or
+Apache-2.0 material; no vendored source is added here.
+
+The action implementation has not landed, so `zod` is the only planned runtime
+package not yet installed.
