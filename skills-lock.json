@@ -1,0 +1,108 @@
+{
+  "version": 2,
+  "skills": {
+    "caveman": {
+      "source": "juliusbrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "skills/caveman/SKILL.md",
+      "computedHash": "415d43518f2b1a9498c15a445d4657117b129ee5e81b19454ce348439cc6672b"
+    },
+    "codebase-design": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/codebase-design/SKILL.md",
+      "computedHash": "2c20617f87ec8af6a434859f381b2f061a69b530444e74eb39e78bb016a6d1e2"
+    },
+    "context7": {
+      "source": "intellectronica/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/context7/SKILL.md",
+      "computedHash": "e1c404ae31f71cb1ef108abfbd153f5761f1ed715a9d9e4c2067e61ff673f42f"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "c00eeea0e13e74fe4a9d84ba0a8542205a1b736d65f13134fe1a6647eb14976f"
+    },
+    "functional-programming-fundamentals": {
+      "source": "whatiskadudoing/fp-ts-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fp-fundamentals/SKILL.md",
+      "computedHash": "3725ce22f042b1686a6838e23817556848ccb8596c26d3073405918261b6ff50"
+    },
+    "github-actions": {
+      "source": "callstackincubator/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/github-actions/SKILL.md",
+      "computedHash": "0d656b3361161b11a04ee741b06bf2e44c2b4dd96ea2d038aa7df0a048fc8850"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "caaf8b8de1684f96e26b28f3c29189db5c89cce4b73e1c93d86164f66ef88637"
+    },
+    "grilling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grilling/SKILL.md",
+      "computedHash": "befdff1e27a1dfe2a294d5871169ac1afe16d983911daa4f32627514a48c1e15"
+    },
+    "improve-codebase-architecture": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
+      "computedHash": "552240a5ab5cec6b67c15dd1ad6e9f6962b1bca6ce870059a8c2713760c20392"
+    },
+    "install-anti-slop": {
+      "source": "dmmulroy/anti-slop",
+      "sourceType": "github",
+      "skillPath": "skills/install-anti-slop/SKILL.md",
+      "computedHash": "2cb88a6ec0c50d9456c695d3980a29e8b554bfab2a28cc8719ca7fa7a9e05ac5"
+    },
+    "nix-best-practices": {
+      "source": "alleneubank/claude-code",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/nix-best-practices/SKILL.md",
+      "computedHash": "90e7babd3ec345f58032652b50fb014b6632f51a3bec648049d8e04d0238646b"
+    },
+    "ponytail": {
+      "source": "dietrichgebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail/SKILL.md",
+      "computedHash": "9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509"
+    },
+    "pragmatic-functional-programming": {
+      "source": "whatiskadudoing/fp-ts-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fp-pragmatic/SKILL.md",
+      "computedHash": "6263238c7eb80171e6ceb51ab2fb69e752b977a42f776b4d7fb6b9c2b625f841"
+    },
+    "thermo-nuclear-code-quality-review": {
+      "source": "cursor/plugins",
+      "sourceType": "github",
+      "skillPath": "cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md",
+      "computedHash": "7faca08b51b643b2ddd0836f92af15574444024685dcc1e677dbbb39ae8c9e8f"
+    },
+    "typescript-best-practices": {
+      "source": "backnotprop/pstack",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-best-practices/SKILL.md",
+      "computedHash": "ec1dac086d3708e5940d45d250c30a37dd953b4e3cb2ca0692f5851d7a039e27"
+    },
+    "untangle-codebase": {
+      "source": "caldoai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/untangle-codebase/SKILL.md",
+      "computedHash": "b4eb6b5130c38ca04532601e99d2d174cf4faa4df520b5b7ba609e8707e55761",
+      "commit": "2e157218049708bf337717847bc1b2a971203e3f"
+    },
+    "using-agent-skills": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/using-agent-skills/SKILL.md",
+      "computedHash": "f32869099e03801cb2f3ce2e17bd30d423098539c10b436e508307787afba5c4"
+    }
+  }
+}

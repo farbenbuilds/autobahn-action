@@ -1,0 +1,46 @@
+name: Feature Request
+description: Suggest a capability for the action, agents, skills, or tooling
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to **autobahn-action**.
+
+        All features must preserve the action's purpose: run the Autobahn WebSocket testsuite in one GitHub Actions step, with deterministic images and machine-readable evidence.
+  - type: input
+    id: description
+    attributes:
+      label: Feature Description
+      description: A short description of the proposed capability.
+      placeholder: E.g. Add a case-selection input that accepts exclusion patterns.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this needed? Which consumer workflow does it improve?
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Proposed Design
+      description: Inputs, outputs, files, and behavior. Note any breaking change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Could a consumer workflow or an existing input cover this?
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Links, examples from other actions, or test ideas.
+    validations:
+      required: false

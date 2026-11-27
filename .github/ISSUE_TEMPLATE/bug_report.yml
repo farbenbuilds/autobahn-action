@@ -1,0 +1,66 @@
+name: Bug Report
+description: Report a defect in the action setup, tooling, agents, or documentation
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a defect in **autobahn-action**.
+
+        Do not disclose security issues publicly. Follow `SECURITY.md` and email the maintainers privately.
+        The action runtime is not implemented yet; setup, tooling, and documentation reports are in scope.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A concise description of the defect.
+      placeholder: E.g. The graphify integration check fails after a fresh clone.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Provide the exact commands and the smallest reproduction.
+      placeholder: |
+        1. Run `pnpm install`
+        2. Run `sh scripts/check-graphify-integrations.sh`
+        3. Observe the failure
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What happened instead? Include the full output.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, CPU architecture, Node version, pnpm version, and libc.
+      placeholder: E.g. Ubuntu 24.04, x86_64, Node 24.22.1, pnpm 12.4.2, glibc
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or Traces
+      description: Paste relevant output in a code block.
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Links, related issues, or a proposed fix.
+    validations:
+      required: false
