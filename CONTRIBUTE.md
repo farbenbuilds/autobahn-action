@@ -4,7 +4,8 @@
 
 - Node.js 24 or newer
 - pnpm 12.4.2
-- Docker, for the action integration test once it exists
+- Docker, for the Autobahn self-test job in `test.yml` and for running the
+  action locally
 - Nix, optional but recommended; `nix develop` provides Node, pnpm, and the
   formatters
 
@@ -23,6 +24,8 @@ pnpm verify
 `pnpm verify` runs linting, convention checks, the format check, the TypeScript
 check, and the unit tests. `pnpm build` produces the committed
 `dist/index.cjs` bundle with esbuild. Rebuild and diff `dist/` before review.
+The Docker self-test runs in `.github/workflows/test.yml`; `test.yml` also
+rebuilds the bundle and checks the committed copy.
 
 ## Commands
 
@@ -36,8 +39,8 @@ pnpm build                 # esbuild bundle to dist/index.cjs
 pnpm verify                # check, typecheck, and tests
 pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check
-nix flake check            # Nix formatting and evaluation
-pnpm hooks:run # staged-file and repository hooks
+nix flake check            # Nix formatting, package, and version checks
+pnpm hooks:run             # staged-file and repository hooks
 sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```

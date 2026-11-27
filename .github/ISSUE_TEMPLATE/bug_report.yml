@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a defect in the action setup, tooling, agents, or documentation
+description: Report a defect in the action runtime, reports, artifacts, CI, documentation, or tooling
 labels: [bug]
 body:
   - type: markdown
@@ -8,7 +8,7 @@ body:
         Thank you for reporting a defect in **autobahn-action**.
 
         Do not disclose security issues publicly. Follow `SECURITY.md` and email the maintainers privately.
-        The action runtime is not implemented yet; setup, tooling, and documentation reports are in scope.
+        The action runtime, report pipeline, artifact upload, CI, documentation, and tooling are in scope.
   - type: input
     id: summary
     attributes:

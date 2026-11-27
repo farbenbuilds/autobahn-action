@@ -2,16 +2,9 @@
 
 ## Supported Versions
 
-The action runtime is in active development. Version 1.0.0 is the first
-release and has not been published yet.
-
-| Version        | Supported        |
-| -------------- | ---------------- |
-| `main`         | Yes, development |
-| Published `v1` | Not released yet |
-
-Once releases begin, the latest major version receives security fixes. Older
-majors receive fixes only when the report also affects the latest major.
+Security fixes target the latest published release and the current `main`
+branch. Older releases are supported only when a fix also applies to the latest
+release.
 
 ## Reporting a Vulnerability
 

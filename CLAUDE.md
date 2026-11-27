@@ -8,8 +8,8 @@ rules; when the two disagree, `AGENTS.md` wins.
 
 ## Claude Code Notes
 
-- Environment checks are `nix flake check` and
-  `pnpm hooks:run`. Repository checks are `pnpm check` and
+- Environment checks are `nix flake check` and `pnpm hooks:run`. Repository
+  checks are `pnpm check`, `pnpm build`, `pnpm typecheck`, `pnpm test`, and
   `sh scripts/check-graphify-integrations.sh`.
 - Use the architect, developer, reviewer, and integrator sequence from
   `AGENT_DIRECTORY.md`. Do not invent specialist agent names.
@@ -18,8 +18,9 @@ rules; when the two disagree, `AGENTS.md` wins.
   model and preloads the project `graphify` skill.
 - Load shared skills from `.agents/skills/<name>/SKILL.md`. Manual-only skills
   run only when the user requests the pass.
-- The action runtime is not implemented yet. Do not add `action.yml`, `src/`,
-  `tests/`, `dist/`, or runtime workflows unless the user asks.
+- The action runtime is implemented. `action.yml`, `src/`, `tests/`,
+  the committed `dist/index.cjs` bundle, and `.github/workflows/test.yml` are
+  current; keep the metadata, source, tests, and bundle in the same change.
 - Do not add comments that narrate the diff. Comments explain an invariant, a
   byte value, ownership, or a deliberate divergence.
 - Do not commit, push, tag, or open a pull request unless the user explicitly

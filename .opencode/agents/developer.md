@@ -11,9 +11,10 @@ smallest complete change, and report changed paths and commands actually run.
 Do not cross an ownership boundary; hand the change to the integrator when it
 belongs to CI, release, Nix, or agent tooling.
 
-The action runtime is not implemented yet. Do not add `action.yml`, `src/`,
-`tests/`, `dist/`, or runtime workflows unless the architect plan explicitly
-starts the implementation phase.
+The action runtime is implemented. `action.yml`, `src/`, `tests/`, the
+committed `dist/index.cjs`, and the runtime workflows are current; keep the
+metadata, source, tests, and bundle in the same change. Run `pnpm verify` and
+`pnpm build`, and report the actual outcomes.
 
 ## Procedure
 

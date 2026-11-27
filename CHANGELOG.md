@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2026-11-28
 
 ### Added
 
@@ -53,11 +53,21 @@ All notable changes to this project are documented here. The format follows
   Node 24 entry point, and the committed `dist/index.cjs` esbuild bundle.
 - esbuild 0.28.2 and `ws` 8.23.1 as development dependencies, plus a WebSocket
   echo server fixture for the self-test.
+- `test.yml` with unit, bundle, and Autobahn self-test jobs, the `Testing`
+  environment, and a verification gate that fails on a failed or cancelled
+  dependency, plus the `Linting` environment in `lint.yml`.
+- Documentation for the implemented 1.0.0 release: consumer quick starts,
+  inputs, outputs, case selection, networking, artifacts, permissions, the
+  module layout, the CI pipeline, and the release shape.
+- Version 1.0.0 release metadata: the package version, the Nix package and
+  version check, and the changelog entry.
 
 ### Notes
 
-- The action runtime is implemented. The runtime self-test workflow, release
-  metadata, and the final documentation pass remain.
+- Version 1.0.0 is the first release. It is published from the commit that
+  contains `dist/index.cjs` and passed `test.yml` on `main`. `v1.0.0` is the
+  immutable release tag and `v1` is the moving major alias; these release
+  notes are the `1.0.0` entry.
 
 ## [0.1.0] - 2026-11-28
 

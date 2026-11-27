@@ -41,11 +41,11 @@ when the upload succeeds.
   policy-failure paths.
 - Upload also runs when the suite container fails after writing a partial
   report, so the partial evidence is available.
-- The upload is skipped with a warning outside GitHub Actions, when
-  `ACTIONS_RUNTIME_TOKEN` is absent, or when `upload-artifact` is false.
-- An upload failure is reported as a warning and recorded in the summary. The
-  protocol result remains authoritative; it is not rewritten by an artifact
-  service failure.
+- Expected skips are logged at informational level outside GitHub Actions, when
+  `ACTIONS_RUNTIME_TOKEN` is absent, or when `upload-artifact` is false. Upload
+  failures are logged as warnings.
+- An upload failure is recorded in the summary. The protocol result remains
+  authoritative; it is not rewritten by an artifact service failure.
 - The action enumerates regular files under the report directory. It does not
   follow symlinks.
 - A default artifact name is not unique across matrix jobs in one workflow

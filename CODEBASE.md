@@ -2,82 +2,88 @@
 
 ## Status
 
-Implementation is in progress. The runtime is implemented: action input
-parsing, server lifecycle and readiness probing, Docker planning and suite
-execution, report persistence, summary rendering, artifact upload, outputs,
-annotations, and the orchestration entry point, each covered by unit tests.
-`action.yml` and the committed `dist/index.cjs` bundle are present. The runtime
-workflows, the local Docker self-test, and the final documentation pass remain.
-
-The module layout below is the implemented boundary. Modules marked `present`
-are implemented now; the rest are landing next. Keep this document current when
-a module is added, renamed, or merged.
+Implemented. The action parses and validates inputs, starts and stops the
+consumer server, waits for a WebSocket handshake, runs the digest-pinned
+Autobahn container, decodes and classifies `servers/index.json`, writes JSON and
+Markdown summaries, appends the job summary, annotates failures, uploads the
+report, publishes outputs, and exits with the configured policy. The input,
+report, server, suite, action, and artifact modules are covered by unit tests.
+`action.yml`, the committed `dist/index.cjs` bundle, and `test.yml` are current.
 
 ## Product Contract
 
-The action runs the Autobahn WebSocket testsuite against a consumer's server.
-One step starts the server, waits for a WebSocket handshake, runs the
-digest-pinned `crossbario/autobahn-testsuite` container, parses
-`servers/index.json`, writes machine and human summaries, annotates failures,
-and exits with the configured policy.
+One step runs the Autobahn WebSocket testsuite against a consumer's server:
 
-The public surface is `action.yml`:
+```yaml
+- uses: farbenbuilds/autobahn-action@v1
+  with:
+    server-command: node dist/server.js
+```
+
+The action also works when a previous step starts the server. The public
+surface is `action.yml`:
 
 - inputs: target URL, optional server command and working directory, readiness
   timeout, case selection, exclusions, agent name, report directory, Docker
   image and network, suite timeout, failure policy, summary and annotation
-  toggles
-- outputs: pass/fail, counts, policy, report paths
-
-The action must work with a server the consumer starts in a previous step and
-with a server the action starts itself. The second form is the one-step
-experience.
+  toggles, artifact toggles
+- outputs: pass/fail, counts, policy, report paths, artifact metadata
 
 ## Module Layout
 
 ```text
-action.yml                    present: public input and output contract
+action.yml                    public input and output contract
 src/
-  main.ts                     present: action entry point and failure boundary
+  main.ts                     action entry point and failure boundary
   action/
-    inputs.ts                 present: parse and validate action.yml inputs
-    outputs.ts                present: format and publish action outputs
-    annotate.ts               present: failure and non-strict annotations
-    run.ts                    present: orchestrate one suite run
-    run-report.ts             present: summarize, upload, and finish a run
+    inputs.ts                 parse and validate action.yml inputs
+    outputs.ts                format and publish action outputs
+    annotate.ts               failure and non-strict annotations
+    run.ts                    orchestrate one suite run
+    run-report.ts             summarize, upload, publish, and finish a run
   domain/
-    autobahn.ts               present: named case and summary types
+    autobahn.ts               named case and summary types
   server/
-    start-server.ts           present: start and stop the consumer server
-    wait-for-server.ts        present: WebSocket handshake readiness probe
+    start-server.ts           start and stop the consumer server
+    wait-for-server.ts        WebSocket handshake readiness probe
   suite/
-    config.ts                 present: fuzzingclient.json construction
-    docker.ts                 present: URL mapping and Docker argument construction
-    run-suite.ts              present: run the container with a timeout
+    config.ts                 fuzzingclient.json construction
+    docker.ts                 URL mapping and Docker argument construction
+    run-suite.ts              run the container with a timeout
   report/
-    paths.ts                  present: resolve report and summary paths
-    prepare-report-dir.ts     present: guard, reset, and create the report tree
-    parse-report.ts           present: decode servers/index.json
-    classify.ts               present: classify, count, and apply policy
-    format-summary.ts         present: build the summary document and Markdown
-    write-report.ts           present: persist JSON, Markdown, step summary
+    paths.ts                  resolve report and summary paths
+    prepare-report-dir.ts     guard, reset, and create the report tree
+    parse-report.ts           decode servers/index.json
+    classify.ts               classify, count, and apply policy
+    format-summary.ts         build the summary document and Markdown
+    write-report.ts           persist JSON, Markdown, step summary
   artifact/
-    upload-report.ts          present: enumerate files and upload one artifact
+    upload-report.ts          enumerate regular files and upload one artifact
 tests/
-  report/                     present: parser, classifier, renderer, guard, and writer tests
-  suite/                      present: config, URL mapping, argument, and run tests
-  server/                     present: readiness, lifecycle, and process-group tests
-  action/                     present: input, output, annotation, and run tests
-  artifact/                   present: skip, URL, file enumeration, and exclusion tests
+  report/                     parser, classifier, renderer, paths, directory, writer
+  suite/                      config, URL mapping, argument, and run tests
+  server/                     readiness and lifecycle tests
+  action/                     input, output, and annotation tests
+  artifact/                   skip, URL, and file enumeration tests
   fixtures/
-    echo-server.mjs           present: WebSocket echo server for the self-test
+    echo-server.mjs           WebSocket echo server for the self-test
 scripts/
-  build.mjs                   present: esbuild bundle of the entry point
-  check-conventions.mjs       present: mechanical repository checks
-  integration-test.mjs        landing next: local Docker end-to-end check
+  build.mjs                   esbuild bundle of the entry point
+  check-conventions.mjs       mechanical repository checks
+  check-agent-parity.sh       four-client role and skill parity
+  check-graphify-integrations.sh
+                              four-client graphify parity
+  check-skills-lock.mjs       skills-lock.json verification
+  check-commit-msg.mjs        commit-message hook check
+  oxlint-plugin.mjs           local no-emoji, no-enum, and no-OOP rules
+  install-graphify-integrations.sh
+                              refresh the graphify integrations
 dist/
-  index.cjs                   present: committed CommonJS release bundle
+  index.cjs                   committed CommonJS release bundle
 ```
+
+Every module stays below 500 lines. Split by responsibility, not by line count,
+and never add a numbered continuation file.
 
 Runtime dependencies are `@actions/core` for the runner interface,
 `@actions/artifact` for report upload, and `arktype` 2.2.10 for boundary
@@ -86,9 +92,6 @@ decoding. Subprocesses use `node:child_process` directly; tests use
 [ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
 [ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
 [ADR 0004](docs/adr/0004-arktype-report-decoder.md).
-
-Every module stays below 500 lines. Split by responsibility, not by line
-count, and never add a numbered continuation file.
 
 ## Data Flow
 
@@ -127,7 +130,7 @@ artifact result never changes the protocol outcome.
 - The server child is stopped on every path: success, suite failure, timeout,
   and readiness failure.
 - The container is named, force-removed on timeout, and mounted with the
-  caller's UID and GID so reports are readable.
+  caller's UID and GID where the platform provides them so reports are readable.
 - Docker arguments are an array. Only `server-command` is intentionally a
   shell command supplied by the consumer.
 - Report and config mount paths are normalized, must be non-root, and must not
@@ -146,12 +149,9 @@ artifact result never changes the protocol outcome.
   the suite error and uploaded as evidence; a missing or malformed report writes
   a failed summary with zero counts.
 - The Markdown report is appended to `GITHUB_STEP_SUMMARY` only when the
-  summary input is enabled and the path exists.
-- Report and summary files are uploaded as one immutable artifact after the
-  summary is written, including when the policy fails. The generated
-  fuzzingclient.json stays local because its target URL can contain a token.
-  The upload is skipped with a warning outside Actions or on GHES, where the v2
-  artifact backend is not available.
+  summary input is enabled and `GITHUB_STEP_SUMMARY` is set.
+- The report directory is uploaded as one immutable artifact after the summary
+  is written, including when the policy fails.
 - Artifact names must be unique in a workflow run. Matrix consumers override
   the default `autobahn-report` name per job.
 - An artifact upload failure is a warning in the summary; it never rewrites
@@ -199,6 +199,27 @@ reachable. Elsewhere it uses bridge networking and maps a loopback target to
 `host.docker.internal`. Consumers can force either mode. A forced bridge
 container reaches a loopback server only when the server listens on the host
 gateway interface.
+
+## Artifact Behavior
+
+The report directory is uploaded after the summary files are written, on the
+success, policy-failure, and pre-report failure paths. The upload is skipped
+with an informational log outside GitHub Actions, when `ACTIONS_RUNTIME_TOKEN`
+or `ACTIONS_RESULTS_URL` is missing, when the input is disabled, when no regular
+files exist, or on an unsupported GHES host. An upload failure is a warning and
+never rewrites the protocol result. The action enumerates regular files with
+`lstat` and does not follow symlinks. The runtime token and result URL are
+redacted from error messages.
+
+## Release Shape
+
+The release ships the committed `dist/index.cjs`, which bundles the runtime
+dependencies. The immutable release tag points at the commit whose `test.yml`
+run on `main` passed; the moving major alias is what consumers reference. The
+release notes come from the `CHANGELOG.md` entry for that release. There is no
+release workflow yet; the repository owner creates the tag and GitHub release
+after the test workflow passes on `main`. See
+[CI_CD_PIPELINE.md](CI_CD_PIPELINE.md).
 
 ## Ownership
 

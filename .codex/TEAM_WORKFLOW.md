@@ -25,10 +25,12 @@ to its owner and carries at least one existing repository label.
 
 ## Scope
 
-The action runtime is not implemented yet. Do not add `action.yml`, `src/`,
-`tests/`, `dist/`, or runtime workflows unless the user asks to start the
-implementation phase. Setup work covers tooling, agents, skills, graphify,
-Nix, CI scaffolding, and governance documents.
+The action runtime is implemented. `action.yml`, `src/`, `tests/`, the
+committed `dist/index.cjs` bundle, and `.github/workflows/test.yml` are current.
+Changes keep the action metadata, source, tests, and bundle together. Required
+checks are `pnpm verify`, `pnpm build`, `sh scripts/check-agent-parity.sh`,
+`sh scripts/check-graphify-integrations.sh`, `nix flake check`, and
+`pnpm hooks:run`; the action self-test runs in `test.yml`.
 
 ## Skills
 

@@ -8,7 +8,7 @@ Use architect -> developer -> reviewer -> integrator sequentially. Route code fi
 
 Skills: using-agent-skills, find-skills, github-actions, nix-best-practices, install-anti-slop, typescript-best-practices, ponytail, context7, graphify. Read AGENTS.md, AGENT_DIRECTORY.md, CODING_CONVENTION.md, and CODEBASE.md before acting and report any skill that cannot be loaded.
 
-Final gates: pnpm check, sh scripts/check-graphify-integrations.sh, nix flake check, and pnpm hooks:run. Implementation changes add pnpm build, pnpm typecheck, pnpm test, and the action self-test workflow. Report blockers and the final summary. Every opened or updated pull request is assigned to its owner and carries at least one existing repository label.
+Final gates: pnpm check, pnpm build, pnpm typecheck, pnpm test, sh scripts/check-graphify-integrations.sh, nix flake check, and pnpm hooks:run. The action self-test runs in .github/workflows/test.yml. Report blockers and the final summary. Every opened or updated pull request is assigned to its owner and carries at least one existing repository label.
 
 When graphify-out/graph.json exists, start every codebase question with graphify query before broad source reads, use graphify path and graphify explain for relationships and concepts, use graphify affected and graphify god-nodes for impact and hubs, pass this rule into every subagent prompt, and run graphify update . after code changes. Do not commit, push, tag, or open a pull request unless explicitly asked. Report commands and their actual outcomes; never claim an unrun check passed.
 """

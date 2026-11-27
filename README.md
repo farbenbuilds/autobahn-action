@@ -1,27 +1,16 @@
 # autobahn-action
 
 Run the [Autobahn WebSocket testsuite](https://github.com/crossbario/autobahn-testsuite)
-from a GitHub Actions workflow.
+from one GitHub Actions step. It can start your server, run the digest-pinned
+suite, write reports, annotate failures, and apply your policy.
 
 [![Lint](https://github.com/farbenbuilds/autobahn-action/actions/workflows/lint.yml/badge.svg)](https://github.com/farbenbuilds/autobahn-action/actions/workflows/lint.yml)
+[![Test](https://github.com/farbenbuilds/autobahn-action/actions/workflows/test.yml/badge.svg)](https://github.com/farbenbuilds/autobahn-action/actions/workflows/test.yml)
 
-## Status
-
-The action runtime is implemented: `action.yml`, the orchestration entry point,
-server lifecycle and readiness probing, suite execution, report persistence,
-summary rendering, annotations, outputs, and automatic artifact upload. The
-committed `dist/index.cjs` bundle is present. The runtime self-test workflow,
-release metadata, and the final documentation pass remain.
-
-The consumer experience is one step:
+## Quick start
 
 ```yaml
-name: Autobahn
-
-on:
-  push:
-    branches: [main]
-  pull_request:
+on: [push, pull_request]
 
 permissions:
   contents: read
@@ -31,138 +20,133 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - run: npm ci
-      - run: npm run build
+
+      - uses: pnpm/setup@v3
+        with:
+          version: 12.4.2
+          runtime: node@24.22.1
+
+      - run: pnpm install --frozen-lockfile && pnpm build
 
       - uses: farbenbuilds/autobahn-action@v1
         with:
           server-command: node dist/server.js
           url: ws://127.0.0.1:9001
+          cases: 1.* 2.* 3.* 4.* 5.* 6.* 7.* 9.* 10.*
 ```
 
-The report is uploaded as the `autobahn-report` artifact automatically, even
-when the protocol gate fails.
+### Server started in a previous step
 
-The action will start the server, wait for a WebSocket handshake, run the
-digest-pinned Autobahn container, parse `servers/index.json`, write JSON and
-Markdown summaries, append the report to the job summary, annotate failures,
-and fail according to the configured policy.
+```yaml
+- run: node dist/server.js &
+- uses: farbenbuilds/autobahn-action@v1
+  with:
+    cases: 1.* 2.* 3.*
+```
+
+Leave `server-command` empty when another step owns the server. The action waits
+for the handshake before it runs the suite.
+
+## What it does
+
+- Starts the optional server command and stops it on every exit path.
+- Waits for a WebSocket handshake, not only a TCP connect.
+- Runs the digest-pinned Autobahn image with explicit Docker arguments.
+- Writes JSON and Markdown summaries, appends the step summary, annotates
+  failures.
+- Applies the `fail-on` policy and uploads the report even when it fails.
 
 ## Inputs
 
-| Input                      | Default                    | Purpose                                   |
-| -------------------------- | -------------------------- | ----------------------------------------- |
-| `url`                      | `ws://127.0.0.1:9001`      | WebSocket target                          |
-| `server-command`           | empty                      | Optional command that starts the server   |
-| `server-working-directory` | `.`                        | Working directory for the command         |
-| `server-ready-timeout`     | `30`                       | Seconds to wait for a handshake           |
-| `cases`                    | `1.*`-`7.*`, `9.*`, `10.*` | Comma- or space-separated case patterns   |
-| `exclude-cases`            | empty                      | Case patterns to skip                     |
-| `agent`                    | `autobahn-action`          | Agent key in the report                   |
-| `report-dir`               | `autobahn-reports`         | Report, summary, and Markdown output      |
-| `docker-image`             | pinned digest              | Autobahn testsuite image                  |
-| `docker-network`           | `auto`                     | `auto`, `host`, or `bridge`               |
-| `timeout`                  | `1800`                     | Seconds allowed for the container         |
-| `fail-on`                  | `failed`                   | `failed`, `non-strict`, or `never`        |
-| `summary`                  | `true`                     | Append the report to the step summary     |
-| `annotate`                 | `true`                     | Annotate failed cases in the log          |
-| `upload-artifact`          | `true`                     | Upload the report as a workflow artifact  |
-| `artifact-name`            | `autobahn-report`          | Artifact name; unique per run             |
-| `retention-days`           | `30`                       | Artifact retention; `0` uses repo default |
+| Input                      | Default                                | Purpose                                  |
+| -------------------------- | -------------------------------------- | ---------------------------------------- |
+| `url`                      | `ws://127.0.0.1:9001`                  | WebSocket target                         |
+| `server-command`           | empty                                  | Optional command that starts the server  |
+| `server-working-directory` | `.`                                    | Working directory for the command        |
+| `server-ready-timeout`     | `30`                                   | Seconds to wait for a handshake          |
+| `cases`                    | `1.* 2.* 3.* 4.* 5.* 6.* 7.* 9.* 10.*` | Space- or comma-separated case patterns  |
+| `exclude-cases`            | empty                                  | Case patterns to skip                    |
+| `agent`                    | `autobahn-action`                      | Agent key in the report                  |
+| `report-dir`               | `autobahn-reports`                     | Report, summary, and Markdown output     |
+| `docker-image`             | pinned Autobahn digest                 | Testsuite image; must keep a digest      |
+| `docker-network`           | `auto`                                 | `auto`, `host`, or `bridge`              |
+| `timeout`                  | `1800`                                 | Seconds allowed for the container        |
+| `fail-on`                  | `failed`                               | `failed`, `non-strict`, or `never`       |
+| `summary`                  | `true`                                 | Append the report to the step summary    |
+| `annotate`                 | `true`                                 | Annotate failed cases in the log         |
+| `upload-artifact`          | `true`                                 | Upload the report as a workflow artifact |
+| `artifact-name`            | `autobahn-report`                      | Artifact name; unique per run            |
+| `retention-days`           | `30`                                   | Artifact retention; `0` uses the default |
+
+`docker-image` defaults to `crossbario/autobahn-testsuite:0.8.2` by digest; see
+`action.yml`.
 
 ## Outputs
 
-`ok`, `outcome`, `total`, `passed`, `failed`, `non-strict`, `informational`,
-`policy`, `report-dir`, `index-path`, `summary-path`, `markdown-path`,
-`artifact-id`, `artifact-url`, `artifact-size`, and `artifact-digest`.
+| Output                                                            | Meaning                                         |
+| ----------------------------------------------------------------- | ----------------------------------------------- |
+| `ok`, `outcome`                                                   | Policy pass/fail result                         |
+| `total`, `passed`, `failed`, `non-strict`, `informational`        | Case counts                                     |
+| `policy`                                                          | Failure policy used for the run                 |
+| `report-dir`, `index-path`, `summary-path`, `markdown-path`       | Report locations                                |
+| `artifact-id`, `artifact-url`, `artifact-size`, `artifact-digest` | Artifact metadata; empty when skipped or failed |
 
-## Design Notes
+## Case selection
 
-Runtime choices: `@actions/core` for the runner interface, `@actions/artifact`
-for automatic report upload, `arktype` 2.2.10 for untrusted report decoding,
-`node:child_process` for explicit subprocess control, `node:test` for tests,
-and esbuild for the committed bundle. There is no `@actions/exec` and no
-`@vercel/ncc`. The reasoning is in
-[ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
-[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
-[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
+The default covers groups 1 through 7, 9, and 10. Group 8 is omitted; the
+compression groups 11 through 13 are excluded by default. Override `cases` to
+opt in, and use `exclude-cases` to remove patterns:
 
-The harness takes its shape from
-[fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js):
-start an echo server, run the fuzzing client with the suite image, read
-`reports/servers/index.json`, count outcomes, and exit non-zero when a case
-fails. It also follows the hardened harnesses in
-[uWebZockets](https://github.com/farbenbuilds/uWebZockets) and
-[ventiws](https://github.com/farbenbuilds/ventiws): a digest-pinned image,
-explicit case groups, a fresh report directory, caller-owned report files, and
-a policy that distinguishes `OK`, `INFORMATIONAL`, and `NON-STRICT` from real
-failures.
+```yaml
+with:
+  cases: 1.* 2.* 3.* 4.* 5.* 6.* 7.* 9.* 10.* 11.* 12.* 13.*
+```
+
+## Networking
+
+`auto` uses host networking on Linux so a server bound to `127.0.0.1` is
+reachable, and bridge networking elsewhere. `host` and `bridge` force either
+mode. In bridge mode a loopback target is rewritten to `host.docker.internal`;
+the server must listen on a container-reachable interface, not only on
+`127.0.0.1`. Forcing bridge on Linux has the same caveat.
+
+## Artifacts and permissions
+
+The report directory is uploaded as the `autobahn-report` artifact after the
+summary is written, including on the failure path. The upload uses the
+runner-provided runtime token, needs no repository secret, and expected skips
+are logged at informational level outside Actions or on unsupported GHES hosts.
+An upload failure is logged as a warning. The workflow needs `contents: read`
+only. Use a unique `artifact-name` for each matrix job.
 
 ## Development
 
-Requirements: Node.js 24 or newer, pnpm 12.4.2, and optionally Nix and Docker.
-
 ```sh
 pnpm install
-pnpm check
-pnpm build
+pnpm verify              # check, typecheck, and tests
+pnpm build               # rebuild dist/index.cjs
 pnpm hooks:install
 nix flake check
 ```
 
-`pnpm build` writes `dist/index.cjs`; rebuild and diff it before review. The
-self-test fixture starts a WebSocket echo server for the runtime workflow:
+`dist/index.cjs` is committed because a consumer's runner does not build the
+repository. Rebuild and diff it before review. `test.yml` rebuilds the bundle,
+runs the unit tests, and runs the action against the echo server.
 
-```sh
-node tests/fixtures/echo-server.mjs --host 127.0.0.1 --port 9001
-node dist/index.cjs
-```
+## Design notes
 
-The second command needs Docker and the action inputs supplied by the runner or
-environment. The full self-test workflow lands with the CI slice.
+The action uses `@actions/core`, `@actions/artifact`, `arktype` 2.2.10,
+`node:child_process`, `node:test`, and esbuild. The reasoning is in
+[ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
+[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
 
-`.envrc` selects the default glibc shell or the musl shell automatically. The
-musl shell keeps only the cached Node and pnpm closure, so a musl host reuses
-the sibling ventiws store paths instead of rebuilding the toolchain. Both
-shells provide Node and pnpm; the default shell also provides TypeScript and
-the formatters. Lefthook is installed by pnpm.
+## Attribution
 
-| Command                                     | Purpose                                   |
-| ------------------------------------------- | ----------------------------------------- |
-| `pnpm check`                                | Lint, convention checks, and format check |
-| `pnpm lint`                                 | Oxlint plus repository conventions        |
-| `pnpm lint:fix`                             | Safe Oxlint fixes                         |
-| `pnpm typecheck`                            | TypeScript check                          |
-| `pnpm test`                                 | Unit tests with `node:test`               |
-| `pnpm build`                                | Bundle the action to `dist/index.cjs`     |
-| `pnpm verify`                               | Check, typecheck, and tests               |
-| `pnpm format`                               | Oxfmt write                               |
-| `pnpm format:check`                         | Oxfmt check                               |
-| `pnpm hooks:run`                            | Lefthook over every file                  |
-| `nix flake check`                           | Nix formatting and flake evaluation       |
-| `pnpm check:agents`                         | Role and skill parity across four clients |
-| `sh scripts/check-graphify-integrations.sh` | Four-client graphify parity               |
-
-## Agent System
-
-The repository is built for four clients only: OpenCode, Google Antigravity,
-Claude Code, and Codex. The roster is `architect`, `developer`, `integrator`,
-and `reviewer`, with matching definitions under `.opencode/agents/`,
-`.agents/agents/`, `.claude/agents/`, and `.codex/agents/`.
-
-Skills are installed under `.agents/skills/` and pinned in
-`skills-lock.json`. Graphify is installed for all four clients. See
-[AGENTS.md](AGENTS.md), [AGENT_DIRECTORY.md](AGENT_DIRECTORY.md),
-[SKILL.md](SKILL.md), and
-[docs/adr/0001-four-agent-clients.md](docs/adr/0001-four-agent-clients.md).
-
-## Contributing
-
-Read [CONTRIBUTE.md](CONTRIBUTE.md), [CODING_CONVENTION.md](CODING_CONVENTION.md),
-and [.github/COMMIT_CONVENTION.md](.github/COMMIT_CONVENTION.md). Security
-reports follow [SECURITY.md](SECURITY.md).
-
-## License
-
-MIT. See [LICENSE](LICENSE). The project is funded through
-[GitHub Sponsors](https://github.com/sponsors/farbenbuilds).
+The harness follows
+[fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js)
+(Apache-2.0) for the configuration shape, default case selection, and flow. No
+upstream source is vendored. The suite is the
+[Autobahn testsuite](https://github.com/crossbario/autobahn-testsuite), which is
+Apache-2.0. This action is MIT licensed under [LICENSE](LICENSE); see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

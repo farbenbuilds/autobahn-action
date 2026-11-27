@@ -1,0 +1,104 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  unit:
+    name: Unit tests and bundle
+    environment: Testing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+        with:
+          version: 12.4.2
+          runtime: node@24.22.1
+          cache: true
+          install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify
+        run: pnpm verify
+
+      - name: Build bundle
+        run: pnpm build
+
+      - name: Check committed bundle
+        run: git diff --exit-code -- dist/index.cjs
+
+      - name: Check graphify integrations
+        run: sh scripts/check-graphify-integrations.sh
+
+  autobahn:
+    name: Autobahn self-test
+    needs: unit
+    environment: Testing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+        with:
+          version: 12.4.2
+          runtime: node@24.22.1
+          cache: true
+          install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run the action against the echo server
+        uses: ./
+        with:
+          server-command: node tests/fixtures/echo-server.mjs
+          cases: ${{ github.event_name == 'pull_request' && '1.1.1 2.1 2.2' || '1.* 2.* 3.* 4.* 5.* 6.* 7.* 9.* 10.*' }}
+          report-dir: autobahn-reports
+          artifact-name: autobahn-report
+
+      - name: Assert report files
+        if: always()
+        run: |
+          for file in \
+            autobahn-reports/servers/index.json \
+            autobahn-reports/summary.json \
+            autobahn-reports/summary.md; do
+            test -s "$file" || { echo "missing or empty: $file" >&2; exit 1; }
+          done
+
+  checks:
+    name: Verification gate
+    needs:
+      - unit
+      - autobahn
+    if: always()
+    environment: Testing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require both jobs to pass
+        run: |
+          results="${{ join(needs.*.result, ',') }}"
+          if [[ "$results" == *failure* || "$results" == *cancelled* ]]; then
+            echo "verification failed: $results" >&2
+            exit 1
+          fi
+          echo "verification passed: $results"

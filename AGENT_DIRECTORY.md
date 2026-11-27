@@ -69,26 +69,23 @@ explicitly asks.
 
 ## Required Checks
 
-Setup and documentation changes:
+Every change:
 
 ```sh
 pnpm check
+pnpm build
+pnpm typecheck
+pnpm test
 sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 nix flake check
 pnpm hooks:run
 ```
 
-Implementation changes will add:
-
-```sh
-pnpm build
-pnpm typecheck
-pnpm test
-```
-
-The reviewer confirms the commands were actually run. A claim without output is
-not evidence.
+`pnpm verify` runs `pnpm check`, `pnpm typecheck`, and `pnpm test` in one
+command. The action self-test in `.github/workflows/test.yml` runs the full
+unit, bundle, and Autobahn self-test path with Docker. The reviewer confirms the
+commands were actually run. A claim without output is not evidence.
 
 ## Skill Coverage
 
