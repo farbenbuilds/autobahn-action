@@ -31,8 +31,8 @@ All notable changes to this project are documented here. The format follows
   as dependencies, direct `node:child_process`, `node:test`, esbuild, and no
   `@actions/exec` or `@vercel/ncc`.
 - `@actions/core` 3.0.1 and `@actions/artifact` 6.3.1 as runtime dependencies.
-- Fast musl direnv startup: host Node and pnpm are used when present, with
-  `nix develop .#musl` kept as the explicit pinned shell.
+- Fast musl direnv startup: the musl shell keeps only the cached Node and
+  pnpm closure and aligns its nixpkgs pin with the sibling ventiws flake.
 - ADR 0003 defining automatic report upload, artifact naming, retention,
   outputs, GHES fallback, and failure behavior.
 

@@ -8,10 +8,10 @@
 - Nix, optional but recommended; `nix develop` provides Node, pnpm, and the
   formatters
 
-On Linux, `.envrc` loads the glibc shell on glibc hosts. On musl hosts it uses
-the system Node and pnpm when present so `direnv allow` does not trigger a
-full musl toolchain build; `nix develop .#musl` is the explicit pinned shell.
-With direnv installed, run `direnv allow` once.
+On Linux, `.envrc` selects the glibc shell on glibc hosts and the musl shell on
+musl hosts. The musl shell is limited to the cached Node and pnpm closure so a
+musl host does not rebuild the toolchain. With direnv installed, run
+`direnv allow` once.
 
 ## Setup
 
