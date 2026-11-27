@@ -60,7 +60,7 @@ All notable changes to this project are documented here. The format follows
   inputs, outputs, case selection, networking, artifacts, permissions, the
   module layout, the CI pipeline, and the release shape.
 - Version 1.0.0 release metadata: the package version, the Nix package and
-  version check, the supported-version policy, and the changelog entry.
+  version check, and the changelog entry.
 
 ### Notes
 

@@ -25,7 +25,7 @@ to its owner and carries at least one existing repository label.
 
 ## Scope
 
-The action runtime is implemented at 1.0.0. `action.yml`, `src/`, `tests/`, the
+The action runtime is implemented. `action.yml`, `src/`, `tests/`, the
 committed `dist/index.cjs` bundle, and `.github/workflows/test.yml` are current.
 Changes keep the action metadata, source, tests, and bundle together. Required
 checks are `pnpm verify`, `pnpm build`, `sh scripts/check-agent-parity.sh`,

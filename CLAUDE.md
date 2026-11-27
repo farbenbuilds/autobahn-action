@@ -18,7 +18,7 @@ rules; when the two disagree, `AGENTS.md` wins.
   model and preloads the project `graphify` skill.
 - Load shared skills from `.agents/skills/<name>/SKILL.md`. Manual-only skills
   run only when the user requests the pass.
-- The action runtime is implemented at 1.0.0. `action.yml`, `src/`, `tests/`,
+- The action runtime is implemented. `action.yml`, `src/`, `tests/`,
   the committed `dist/index.cjs` bundle, and `.github/workflows/test.yml` are
   current; keep the metadata, source, tests, and bundle in the same change.
 - Do not add comments that narrate the diff. Comments explain an invariant, a

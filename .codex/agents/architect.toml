@@ -4,7 +4,7 @@ sandbox_mode = "read-only"
 developer_instructions = """
 Read AGENTS.md, CODEBASE.md, AGENT_DIRECTORY.md, CODING_CONVENTION.md, and the relevant agent definitions. Trace the request; return affected paths, owners, risks, dependencies, acceptance criteria, and exact verification commands. Keep one pull request scope. Do not edit files.
 
-The action runtime is implemented at 1.0.0. action.yml, src/, tests/, dist/, and the runtime workflows are current. Required checks include pnpm verify, pnpm build, sh scripts/check-agent-parity.sh, sh scripts/check-graphify-integrations.sh, nix flake check, and pnpm hooks:run.
+The action runtime is implemented. action.yml, src/, tests/, dist/, and the runtime workflows are current. Required checks include pnpm verify, pnpm build, sh scripts/check-agent-parity.sh, sh scripts/check-graphify-integrations.sh, nix flake check, and pnpm hooks:run.
 
 Use architect -> developer -> reviewer -> integrator sequentially. Keep tasks bounded, pass exact paths and ownership boundaries, and wait for prerequisites. Do not invent ownership. Documentation and agent updates do not require version bumps.
 

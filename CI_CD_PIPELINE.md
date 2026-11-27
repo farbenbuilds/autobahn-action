@@ -76,11 +76,10 @@ never logged. No workflow publishes, tags, or writes to the repository.
 
 ## Release Shape
 
-`v1.0.0` is the immutable release tag. It points at a commit that contains
-`dist/index.cjs` and whose `test.yml` run on `main` passed. `v1` is the moving
-major alias tag used by consumers through
-`uses: farbenbuilds/autobahn-action@v1`; it moves only to a passing release
-commit. The release notes come from the `1.0.0` entry in `CHANGELOG.md`.
+The immutable release tag points at a commit that contains `dist/index.cjs` and
+whose `test.yml` run on `main` passed. The moving major alias is what consumers
+reference, and it moves only to a passing release commit. The release notes come
+from the `CHANGELOG.md` entry for that release.
 
 The release is created only after `test.yml` passes on `main`. Publishing does
 not build on the consumer's runner: the tag already contains the bundle.

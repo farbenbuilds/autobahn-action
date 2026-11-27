@@ -15,9 +15,9 @@ The action starts the server under test, runs the digest-pinned
 `crossbario/autobahn-testsuite` image, reads the report, writes a JSON and
 Markdown summary, annotates failures, and exits with the configured policy.
 
-The project is implemented at 1.0.0. `action.yml`, the runtime, the unit tests,
-the committed `dist/index.cjs` bundle, and `test.yml` are current. `v1.0.0` is
-the immutable release tag; `v1` is the moving major alias used by consumers.
+The project is implemented. `action.yml`, the runtime, the unit tests, the
+committed `dist/index.cjs` bundle, and `test.yml` are current. A release tag is
+immutable; the moving major alias is what consumers reference.
 
 ## Documentation Map
 
