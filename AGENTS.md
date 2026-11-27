@@ -15,10 +15,9 @@ The action will start the server under test, run the digest-pinned
 `crossbario/autobahn-testsuite` image, read the report, write a JSON and
 Markdown summary, annotate failures, and exit with the configured policy.
 
-The action implementation is not present yet. This repository currently ships
-the tooling, agent, skill, and environment system only. `action.yml`, `src/`,
-`tests/`, `dist/`, and runtime workflows land in the implementation phase. Do
-not invent them while doing setup work.
+Implementation is in progress. The input, configuration, and Docker planning
+modules are present; `action.yml`, the runtime entry point, the committed
+bundle, and the runtime workflows land in the remaining slices.
 
 ## Documentation Map
 

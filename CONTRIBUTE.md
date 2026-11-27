@@ -17,12 +17,12 @@ musl host does not rebuild the toolchain. With direnv installed, run
 
 ```sh
 pnpm install
-pnpm check
+pnpm verify
 ```
 
-If the repository is in the setup phase, `pnpm check` runs linting, convention
-checks, and formatting only. `pnpm build`, `pnpm typecheck`, `pnpm test`, and
-the action self-test arrive with the runtime implementation.
+`pnpm verify` runs linting, convention checks, the format check, the TypeScript
+check, and the unit tests. `pnpm build` lands with the bundled action entry
+point.
 
 ## Commands
 
@@ -30,6 +30,9 @@ the action self-test arrive with the runtime implementation.
 pnpm check                 # lint, conventions, format check
 pnpm lint                  # Oxlint plus scripts/check-conventions.mjs
 pnpm lint:fix              # safe Oxlint fixes
+pnpm typecheck             # TypeScript check
+pnpm test                  # node:test unit suite
+pnpm verify                # check, typecheck, and tests
 pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check
 nix flake check            # Nix formatting and evaluation

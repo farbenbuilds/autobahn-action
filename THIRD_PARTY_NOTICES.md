@@ -16,6 +16,17 @@ third-party material.
 
 The plugin is installed and updated through the `install-anti-slop` skill.
 
+## Reference Configurations
+
+- Source: https://github.com/denoland/fastwebsockets/tree/main/autobahn
+- License: Apache-2.0
+- What is referenced: the default Autobahn case selection (1-7, 9, 10), the
+  fuzzingclient configuration shape, and the harness flow used as the design
+  reference.
+- Vendoring: no upstream source files are vendored. `autobahn-action` is a
+  TypeScript implementation; only configuration values and behavioral
+  expectations are referenced.
+
 ## Installed Skills
 
 Skills under `.agents/skills/` are pinned by `skills-lock.json`. Each upstream
@@ -53,12 +64,8 @@ binary is a development tool and is not distributed with this repository.
 | ------------------- | ------- | ------- | --------------------------------------------- |
 | `@actions/core`     | 3.0.1   | MIT     | Runner inputs, outputs, logging, step summary |
 | `@actions/artifact` | 6.3.1   | MIT     | Upload the report as an Actions artifact      |
-| `zod`               | planned | MIT     | Decode the untrusted report at the boundary   |
 
 `@actions/artifact` brings transitive dependencies for the artifact backend,
 including the Actions HTTP client, Octokit, and the Azure Blob Storage client.
 Their licenses are recorded in `pnpm-lock.yaml` and remain upstream MIT or
 Apache-2.0 material; no vendored source is added here.
-
-The action implementation has not landed, so `zod` is the only planned runtime
-package not yet installed.

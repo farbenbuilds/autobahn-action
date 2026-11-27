@@ -35,12 +35,15 @@ All notable changes to this project are documented here. The format follows
   pnpm closure and aligns its nixpkgs pin with the sibling ventiws flake.
 - ADR 0003 defining automatic report upload, artifact naming, retention,
   outputs, GHES fallback, and failure behavior.
+- Runtime core: validated action inputs, canonical Autobahn case defaults,
+  fuzzingclient configuration builder, Docker network and argument planning,
+  and `typecheck`, `test`, and `verify` scripts.
 
 ### Notes
 
-- The action runtime is not implemented yet. `action.yml`, `src/`, `tests/`,
-  `dist/`, and the Autobahn self-test workflow land in the implementation
-  phase.
+- The runtime is under active implementation. `action.yml`, the action entry
+  point, `dist/`, the report pipeline, and the Autobahn self-test workflow land
+  in the remaining slices.
 
 ## [0.1.0] - 2026-11-28
 
