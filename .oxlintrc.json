@@ -1,0 +1,82 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": [
+    "./scripts/oxlint-plugin.mjs",
+    {
+      "name": "anti-slop",
+      "specifier": "./tools/oxlint/anti-slop/index.ts"
+    }
+  ],
+  "plugins": ["import", "oxc", "typescript", "unicorn"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "autobahn/no-emoji": "error",
+    "autobahn/no-enum": "error",
+    "autobahn/no-oop": "error",
+    "anti-slop/no-array-filter-map": "error",
+    "anti-slop/no-chained-type-assertions": "error",
+    "anti-slop/no-conditional-empty-object-spread": "error",
+    "anti-slop/no-known-value-widening": "error",
+    "anti-slop/no-module-mocking": "error",
+    "anti-slop/no-object-parameters": "error",
+    "anti-slop/no-reduce-accumulator-copy": "error",
+    "anti-slop/no-reflect-apply": "error",
+    "anti-slop/no-reflect-get": "error",
+    "anti-slop/no-runtime-typeof": "error",
+    "anti-slop/no-shape-in-symbol-names": "error",
+    "anti-slop/no-unknown-parameters": "error",
+    "anti-slop/no-unknown-returns": "error",
+    "anti-slop/no-unknown-type-aliases": "error",
+    "anti-slop/no-unsafe-dictionary-type": "error",
+    "anti-slop/no-widen-then-assert": "error",
+    "anti-slop/require-readable-spacing": "error",
+    "anti-slop/require-safety-comment-for-type-assertion": "error",
+    "eqeqeq": ["error", "always"],
+    "import/no-default-export": "error",
+    "max-lines": ["error", { "max": 500 }],
+    "no-console": "error",
+    "no-else-return": "error",
+    "no-var": "error",
+    "oxc/no-accumulating-spread": "error",
+    "prefer-const": "error",
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "separate-type-imports"
+      }
+    ],
+    "typescript/explicit-module-boundary-types": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }]
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*.mjs", "scripts/**/*.d.mts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["tests/**/*.ts"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    ".gemini/**",
+    ".opencode/**",
+    "tools/oxlint/anti-slop/**",
+    "dist/**",
+    "autobahn-reports/**",
+    "node_modules/**"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    ".gemini/**",
+    ".opencode/**",
+    "tools/oxlint/anti-slop/**",
+    "dist/**",
+    "autobahn-reports/**",
+    "pnpm-lock.yaml",
+    "skills-lock.json",
+    "flake.lock"
+  ]
+}

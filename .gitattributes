@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+dist/** linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+*.node binary
+*.tgz binary
+*.zip binary
