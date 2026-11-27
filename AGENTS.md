@@ -3,13 +3,7 @@
 ## Project
 
 `autobahn-action` packages the Autobahn WebSocket testsuite as a GitHub
-Action. A consumer writes one step:
-
-```yaml
-- uses: farbenbuilds/autobahn-action@v1
-  with:
-    server-command: node dist/server.js
-```
+Action. A consumer references the release tag from the README in one step.
 
 The action starts the server under test, runs the digest-pinned
 `crossbario/autobahn-testsuite` image, reads the report, writes a JSON and
@@ -17,7 +11,7 @@ Markdown summary, annotates failures, and exits with the configured policy.
 
 The project is implemented. `action.yml`, the runtime, the unit tests, the
 committed `dist/index.cjs` bundle, and `test.yml` are current. A release tag is
-immutable; the moving major alias is what consumers reference.
+immutable; consumers reference the release tag.
 
 ## Documentation Map
 

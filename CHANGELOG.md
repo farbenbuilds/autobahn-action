@@ -69,8 +69,7 @@ All notable changes to this project are documented here. The format follows
 
 - Version 1.0.0 is the first release. It is published from the commit that
   contains `dist/index.cjs` and passed `test.yml` on `main`. `v1.0.0` is the
-  immutable release tag and `v1` is the moving major alias; these release
-  notes are the `1.0.0` entry.
+  immutable release tag; these release notes are the `1.0.0` entry.
 
 ## [0.1.0] - 2026-11-28
 
