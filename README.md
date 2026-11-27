@@ -8,10 +8,10 @@ from a GitHub Actions workflow.
 ## Status
 
 The runtime is under active implementation. The action input, configuration,
-and Docker planning core has landed with unit tests, but this is not yet a
-consumable action. `action.yml`, the runtime entry point, the report pipeline,
-the committed bundle, and the Autobahn workflow land in the remaining
-implementation slices.
+Docker planning core, report parser, classifier, and Markdown summary have
+landed with unit tests, but this is not yet a consumable action. `action.yml`,
+the runtime entry point, report persistence, the committed bundle, and the
+Autobahn workflow land in the remaining implementation slices.
 
 The planned consumer experience is one step:
 
@@ -79,12 +79,13 @@ and fail according to the configured policy.
 ## Design Notes
 
 Runtime choices: `@actions/core` for the runner interface, `@actions/artifact`
-for automatic report upload, `node:child_process` for explicit subprocess
-control, `node:test` for tests, and esbuild for the committed bundle. There is
-no `@actions/exec` and no `@vercel/ncc`. See
-[docs/adr/0002-action-runtime-toolchain.md](docs/adr/0002-action-runtime-toolchain.md)
-and
-[docs/adr/0003-automatic-report-artifact-upload.md](docs/adr/0003-automatic-report-artifact-upload.md).
+for automatic report upload, `arktype` 2.2.10 for untrusted report decoding,
+`node:child_process` for explicit subprocess control, `node:test` for tests,
+and esbuild for the committed bundle. There is no `@actions/exec` and no
+`@vercel/ncc`. The reasoning is in
+[ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
+[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
 
 The harness takes its shape from
 [fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js):

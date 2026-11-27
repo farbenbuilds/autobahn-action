@@ -172,6 +172,9 @@ importers:
       '@actions/core':
         specifier: 3.0.1
         version: 3.0.1
+      arktype:
+        specifier: 2.2.10
+        version: 2.2.10
     devDependencies:
       '@oxlint/plugins':
         specifier: 1.95.0
@@ -214,6 +217,12 @@ packages:
 
   '@actions/io@3.0.2':
     resolution: {integrity: sha512-nRBchcMM+QK1pdjO7/idu86rbJI5YHUKCvKs0KxnSYbVe3F51UfGxuZX4Qy/fWlp6l7gWFwIkrOzN+oUK03kfw==}
+
+  '@ark/schema@0.56.9':
+    resolution: {integrity: sha512-3kFUweE9PagqzEC9FEOirBRrVxBj0D6o8UiZDDrCyrcaBepRFHjUezf6MuTk8mKfJ4NKzSsaUCOVK+jzcm+dPw==}
+
+  '@ark/util@0.56.9':
+    resolution: {integrity: sha512-/yA1me+AMmI75VaQ5owz1A1owopAJ0ZZFXy9SI1Q69kErJfxuglQBYjGeOTFyygJjZ9Rf4UjCtD5XTuEiNiGHw==}
 
   '@azure/abort-controller@2.2.0':
     resolution: {integrity: sha512-fNAjWnA/nZ2jz31kxR/AqRaUT8ewHBw/WuBIosK0moMy1C9e5ValbDfFdIxJzVOOYaYkV/b2F1S4H/aHiqfVQg==}
@@ -769,6 +778,12 @@ packages:
   archiver@7.0.1:
     resolution: {integrity: sha512-ZcbTaIqJOfCc03QwD468Unz/5Ir8ATtvAHsK+FdXbDIbGfihqh9mrvdcYunQzqn4HrvWWaFyaxJhGZagaJJpPQ==}
     engines: {node: '>= 14'}
+
+  arkregex@0.0.15:
+    resolution: {integrity: sha512-mu9vS4b8kTipqr2AfVIL1NYhGH47CZgPdYFzB762lu4/dsxm7hmNsN3ayDahcM9OhepOpTQc+W744yh4KE+mAw==}
+
+  arktype@2.2.10:
+    resolution: {integrity: sha512-xfum3++1RGjULFBeeXph3XrejEhAfswZlpH/V5m324j8aZ/53tHUd8OPCXE1v5iU/2UEkn/ZDFUT0Exkjv96xA==}
 
   array-buffer-byte-length@1.0.2:
     resolution: {integrity: sha512-LHE+8BuR7RYGDKvnrmcuSq3tDcKv9OFEXQt/HpbZhY7V6h0zlUXutnAD82GiFx9rdieCMjkvtcsPqBwgUl1Iiw==}
@@ -1667,6 +1682,12 @@ snapshots:
 
   '@actions/io@3.0.2': {}
 
+  '@ark/schema@0.56.9':
+    dependencies:
+      '@ark/util': 0.56.9
+
+  '@ark/util@0.56.9': {}
+
   '@azure/abort-controller@2.2.0':
     dependencies:
       tslib: 2.9.1
@@ -2116,6 +2137,16 @@ snapshots:
       - bare-abort-controller
       - bare-buffer
       - react-native-b4a
+
+  arkregex@0.0.15:
+    dependencies:
+      '@ark/util': 0.56.9
+
+  arktype@2.2.10:
+    dependencies:
+      '@ark/schema': 0.56.9
+      '@ark/util': 0.56.9
+      arkregex: 0.0.15
 
   array-buffer-byte-length@1.0.2:
     dependencies:

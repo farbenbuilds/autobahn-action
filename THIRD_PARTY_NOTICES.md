@@ -64,6 +64,7 @@ binary is a development tool and is not distributed with this repository.
 | ------------------- | ------- | ------- | --------------------------------------------- |
 | `@actions/core`     | 3.0.1   | MIT     | Runner inputs, outputs, logging, step summary |
 | `@actions/artifact` | 6.3.1   | MIT     | Upload the report as an Actions artifact      |
+| `arktype`           | 2.2.10  | MIT     | Decode the untrusted report at the boundary   |
 
 `@actions/artifact` brings transitive dependencies for the artifact backend,
 including the Actions HTTP client, Octokit, and the Azure Blob Storage client.

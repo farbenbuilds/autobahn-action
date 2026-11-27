@@ -4,9 +4,10 @@
 
 Implementation is in progress. The runtime core is present: action input
 parsing and validation, shared report types, the fuzzingclient configuration
-builder, and Docker network and argument planning, each covered by unit tests.
-The action entry point, server lifecycle, suite execution, report parsing and
-summaries, artifact upload, `action.yml`, the committed bundle, and runtime
+builder, Docker network and argument planning, and the report pipeline that
+decodes, classifies, and summarizes the suite output, each covered by unit
+tests. The action entry point, server lifecycle, suite execution, report
+persistence, artifact upload, `action.yml`, the committed bundle, and runtime
 workflows land in the remaining slices.
 
 The module layout below is the target boundary. Modules marked `present` are
@@ -52,14 +53,14 @@ src/
     docker.ts                 present: URL mapping and Docker argument construction
     run-suite.ts              landing next: run the container with a timeout
   report/
-    parse-report.ts           landing next: decode servers/index.json
-    classify.ts               landing next: tolerate, classify, count, and policy
-    format-summary.ts         landing next: render Markdown
+    parse-report.ts           present: decode servers/index.json
+    classify.ts               present: classify, count, and apply policy
+    format-summary.ts         present: build the summary document and Markdown
     write-report.ts           landing next: persist JSON, Markdown, step summary
   artifact/
     upload-report.ts          landing next: enumerate files and upload one artifact
 tests/
-  report/                     landing next: parser, classifier, and renderer tests
+  report/                     present: parser, classifier, and renderer tests
   suite/                      present: config, URL mapping, and argument tests
   server/                     landing next: readiness and lifecycle tests
   action/                     present: input parsing tests
@@ -71,13 +72,13 @@ dist/
   index.cjs                   landing next: committed CommonJS release bundle
 ```
 
-Runtime dependencies are `@actions/core` for the runner interface and
-`@actions/artifact` for report upload. The report boundary decoder lands with
-the report pipeline and will use ArkType. Subprocesses use
-`node:child_process` directly; tests use `node:test`. The
-bundler is esbuild, not `@vercel/ncc`. The reasoning is in
-[ADR 0002](docs/adr/0002-action-runtime-toolchain.md) and
-[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md).
+Runtime dependencies are `@actions/core` for the runner interface,
+`@actions/artifact` for report upload, and `arktype` 2.2.10 for boundary
+decoding. Subprocesses use `node:child_process` directly; tests use
+`node:test`. The bundler is esbuild, not `@vercel/ncc`. The reasoning is in
+[ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
+[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
 
 Every module stays below 500 lines. Split by responsibility, not by line
 count, and never add a numbered continuation file.

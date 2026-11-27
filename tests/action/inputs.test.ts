@@ -354,7 +354,7 @@ describe("parseActionInputs", () => {
   });
 
   it("loads boolean defaults and values from the environment", () => {
-    const keys = ["INPUT_SUMMARY", "INPUT_ANNOTATE", "INPUT_UPLOAD-ARTIFACT"] as const;
+    const keys = ["INPUT_SUMMARY", "INPUT_ANNOTATE", "INPUT_UPLOAD-ARTIFACT"];
     const previousValues = keys.map((key) => process.env[key]);
 
     try {

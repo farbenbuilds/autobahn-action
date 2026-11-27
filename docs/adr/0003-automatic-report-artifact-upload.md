@@ -84,7 +84,8 @@ v1 uses the older artifact backend and is out of maintenance. v6 is what
 
 ## Consequences
 
-- Runtime dependencies become `@actions/core`, `@actions/artifact`, and `zod`.
+- Runtime dependencies become `@actions/core`, `@actions/artifact`, and
+  `arktype` 2.2.10.
 - The dev tree grows by the artifact client's transitive dependencies. The
   action bundle grows, but esbuild bundles only the reachable code.
 - The action works on GitHub-hosted and self-hosted runners with access to the
