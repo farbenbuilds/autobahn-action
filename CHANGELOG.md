@@ -27,22 +27,27 @@ All notable changes to this project are documented here. The format follows
   convention, funding metadata, and Dependabot configuration.
 - Agent parity checks, CODEOWNERS, and ADR 0001 recording the four-client
   decision.
-- ADR 0002 recording the action runtime toolchain: `@actions/core` and `zod`
-  as dependencies, direct `node:child_process`, `node:test`, esbuild, and no
+- ADR 0002 recording the action runtime toolchain: `@actions/core` as the
+  runner interface, direct `node:child_process`, `node:test`, esbuild, and no
   `@actions/exec` or `@vercel/ncc`.
 - `@actions/core` 3.0.1 and `@actions/artifact` 6.3.1 as runtime dependencies.
 - Fast musl direnv startup: the musl shell keeps only the cached Node and
   pnpm closure and aligns its nixpkgs pin with the sibling ventiws flake.
 - ADR 0003 defining automatic report upload, artifact naming, retention,
   outputs, GHES fallback, and failure behavior.
+- ADR 0004 recording ArkType 2.2.10 as the report boundary decoder and
+  superseding ADR 0002's earlier schema-library choice.
 - Runtime core: validated action inputs, canonical Autobahn case defaults,
   fuzzingclient configuration builder, Docker network and argument planning,
   and `typecheck`, `test`, and `verify` scripts.
+- Report pipeline: ArkType-validated `servers/index.json` decoding, natural
+  case ordering, failure classification under all three policies, and
+  deterministic summary document and Markdown rendering.
 
 ### Notes
 
 - The runtime is under active implementation. `action.yml`, the action entry
-  point, `dist/`, the report pipeline, and the Autobahn self-test workflow land
+  point, `dist/`, report persistence, and the Autobahn self-test workflow land
   in the remaining slices.
 
 ## [0.1.0] - 2026-11-28

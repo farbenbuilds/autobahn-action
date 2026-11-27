@@ -4,7 +4,9 @@
 
 Accepted on 2026-11-28. Amended by
 [ADR 0003](0003-automatic-report-artifact-upload.md): `@actions/artifact` is
-now a planned runtime dependency.
+now a planned runtime dependency, and by
+[ADR 0004](0004-arktype-report-decoder.md): the report boundary uses ArkType
+2.2.10.
 
 ## Context
 
@@ -15,7 +17,8 @@ deferred, but the dependency choices affect the module layout, the security
 boundary, and the release process.
 
 The setup originally had no runtime dependency. ADR 0003 adds
-`@actions/artifact`; the other decisions here still apply.
+`@actions/artifact`, and ADR 0004 replaces the original report boundary schema
+library. The other decisions here still apply.
 
 ## Decision
 
@@ -62,11 +65,12 @@ consumer's runner does not run the repository build.
 The bundle is generated output. Review the source, the build script, and the
 lockfile; do not hand-edit `dist`.
 
-### zod: yes
+### Report boundary schema library: ArkType
 
-Use zod at the report boundary. `servers/index.json` is untrusted, and the
-anti-slop rules reject unchecked casts and `unknown` domain contracts. The
-schema is the source of the decoded report type.
+Use ArkType 2.2.10 at the report boundary. `servers/index.json` is untrusted,
+and the anti-slop rules reject unchecked casts and `unknown` domain contracts.
+The schema is the source of the decoded report type. ADR 0004 records the
+nested index-signature schema and error handling.
 
 ### node:test: yes
 
@@ -81,7 +85,8 @@ is a runtime dependency.
 
 ## Consequences
 
-- Runtime dependencies are `@actions/core`, `@actions/artifact`, and `zod`.
+- Runtime dependencies are `@actions/core`, `@actions/artifact`, and `arktype`
+  2.2.10.
 - `@actions/exec` and `@vercel/ncc` stay out of the tree until a documented
   requirement proves one is necessary.
 - All subprocess calls use explicit argument arrays and explicit timeouts.
