@@ -10,8 +10,8 @@ The action starts the server under test, runs the digest-pinned
 Markdown summary, annotates failures, and exits with the configured policy.
 
 The project is implemented. `action.yml`, the runtime, the unit tests, the
-committed `dist/index.cjs` bundle, and `test.yml` are current. A release tag is
-immutable; consumers reference the release tag.
+committed `dist/index.cjs` bundle, and `test.yml` are current. Consumers may
+reference the moving major alias or an immutable release tag.
 
 ## Documentation Map
 

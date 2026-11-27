@@ -76,9 +76,11 @@ never logged. No workflow publishes, tags, or writes to the repository.
 
 ## Release Shape
 
-The immutable release tag points at a commit that contains `dist/index.cjs` and
-whose `test.yml` run on `main` passed. Consumers reference that release tag. The
-release notes come from the `CHANGELOG.md` entry for that release.
+Immutable release tags point at commits that contain `dist/index.cjs` and whose
+`test.yml` run on `main` passed. A moving major alias points at the latest
+release in that major and moves only to a passing release commit. Consumers may
+reference either. The release notes come from the `CHANGELOG.md` entry for that
+release.
 
 The release is created only after `test.yml` passes on `main`. Publishing does
 not build on the consumer's runner: the tag already contains the bundle.
