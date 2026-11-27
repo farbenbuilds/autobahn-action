@@ -28,7 +28,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile && pnpm build
 
-      - uses: farbenbuilds/autobahn-action@v1.0.0
+      - uses: farbenbuilds/autobahn-action@v1
         with:
           server-command: node dist/server.js
           url: ws://127.0.0.1:9001
@@ -39,7 +39,7 @@ jobs:
 
 ```yaml
 - run: node dist/server.js &
-- uses: farbenbuilds/autobahn-action@v1.0.0
+- uses: farbenbuilds/autobahn-action@v1
   with:
     cases: 1.* 2.* 3.*
 ```

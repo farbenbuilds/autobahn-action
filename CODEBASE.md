@@ -15,7 +15,7 @@ report, server, suite, action, and artifact modules are covered by unit tests.
 One step runs the Autobahn WebSocket testsuite against a consumer's server:
 
 ```yaml
-- uses: farbenbuilds/autobahn-action@<release-tag>
+- uses: farbenbuilds/autobahn-action@<major-alias>
   with:
     server-command: node dist/server.js
 ```
@@ -217,9 +217,9 @@ redacted from error messages.
 ## Release Shape
 
 The release ships the committed `dist/index.cjs`, which bundles the runtime
-dependencies. The immutable release tag points at the commit whose `test.yml`
-run on `main` passed; consumers reference that release tag. The release notes
-come from the `CHANGELOG.md` entry for that release. There is no
+dependencies. Immutable release tags point at commits whose `test.yml` run on
+`main` passed; a moving major alias points at the latest release in that major.
+The release notes come from the `CHANGELOG.md` entry for that release. There is no
 release workflow yet; the repository owner creates the tag and GitHub release
 after the test workflow passes on `main`. See
 [CI_CD_PIPELINE.md](CI_CD_PIPELINE.md).
