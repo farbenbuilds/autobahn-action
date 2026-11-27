@@ -95,6 +95,7 @@ describe("buildDockerPlan", () => {
 
     assert.equal(plan.network, "host");
     assert.equal(plan.containerUrl, "ws://127.0.0.1:9001");
+    assert.equal(plan.containerName, "autobahn-testsuite");
     assert.deepEqual(plan.args, [
       "docker",
       "run",

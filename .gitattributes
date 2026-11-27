@@ -1,6 +1,6 @@
 * text=auto eol=lf
 
-dist/** linguist-generated=true
+dist/** linguist-generated=true whitespace=-trailing-space,-space-before-tab
 pnpm-lock.yaml linguist-generated=true
 *.node binary
 *.tgz binary

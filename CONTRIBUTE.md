@@ -21,8 +21,8 @@ pnpm verify
 ```
 
 `pnpm verify` runs linting, convention checks, the format check, the TypeScript
-check, and the unit tests. `pnpm build` lands with the bundled action entry
-point.
+check, and the unit tests. `pnpm build` produces the committed
+`dist/index.cjs` bundle with esbuild. Rebuild and diff `dist/` before review.
 
 ## Commands
 
@@ -32,6 +32,7 @@ pnpm lint                  # Oxlint plus scripts/check-conventions.mjs
 pnpm lint:fix              # safe Oxlint fixes
 pnpm typecheck             # TypeScript check
 pnpm test                  # node:test unit suite
+pnpm build                 # esbuild bundle to dist/index.cjs
 pnpm verify                # check, typecheck, and tests
 pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check

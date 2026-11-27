@@ -22,6 +22,7 @@ export type DockerPlan = {
   args: string[];
   containerUrl: string;
   network: ContainerNetwork;
+  containerName: string;
 };
 
 const HOST_GATEWAY_NAME = "host.docker.internal";
@@ -168,5 +169,6 @@ export function buildDockerPlan(input: DockerPlanInput): DockerPlan {
     args,
     containerUrl: mapContainerUrl(input.url, network),
     network,
+    containerName: input.containerName,
   };
 }

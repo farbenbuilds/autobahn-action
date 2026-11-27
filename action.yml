@@ -1,0 +1,115 @@
+name: Autobahn WebSocket testsuite
+description: Run the pinned Autobahn WebSocket testsuite against a server and publish the report.
+author: Farben
+
+branding:
+  icon: activity
+  color: purple
+
+inputs:
+  url:
+    description: WebSocket URL of the server under test.
+    required: false
+    default: ws://127.0.0.1:9001
+  server-command:
+    description: Shell command that starts the server under test. Leave empty when a previous step starts it.
+    required: false
+    default: ""
+  server-working-directory:
+    description: Working directory for server-command, resolved against the workspace.
+    required: false
+    default: .
+  server-ready-timeout:
+    description: Seconds to wait for a WebSocket handshake from the server.
+    required: false
+    default: "30"
+  cases:
+    description: Space or comma separated Autobahn case patterns to run.
+    required: false
+    default: 1.* 2.* 3.* 4.* 5.* 6.* 7.* 9.* 10.*
+  exclude-cases:
+    description: Space or comma separated Autobahn case patterns to exclude.
+    required: false
+    default: ""
+  agent:
+    description: Agent name recorded in the Autobahn report.
+    required: false
+    default: autobahn-action
+  report-dir:
+    description: Report directory, relative to the workspace or absolute.
+    required: false
+    default: autobahn-reports
+  docker-image:
+    description: Autobahn testsuite image pinned by digest.
+    required: false
+    default: crossbario/autobahn-testsuite:0.8.2@sha256:519915fb568b04c9383f70a1c405ae3ff44ab9e35835b085239c258b6fac3074
+  docker-network:
+    description: "Docker network mode: auto, host, or bridge."
+    required: false
+    default: auto
+  timeout:
+    description: Suite timeout in seconds.
+    required: false
+    default: "1800"
+  fail-on:
+    description: "Failure policy: failed, non-strict, or never."
+    required: false
+    default: failed
+  summary:
+    description: Append the Markdown report to the job step summary.
+    required: false
+    default: "true"
+  annotate:
+    description: Annotate failed and, under the non-strict policy, non-strict cases.
+    required: false
+    default: "true"
+  upload-artifact:
+    description: Upload the report directory as a workflow artifact.
+    required: false
+    default: "true"
+  artifact-name:
+    description: Artifact name. Use a unique name for each matrix job.
+    required: false
+    default: autobahn-report
+  retention-days:
+    description: Artifact retention in days. Zero uses the repository default.
+    required: false
+    default: "30"
+
+outputs:
+  ok:
+    description: "true when the configured policy passed, otherwise false."
+  outcome:
+    description: "Run outcome: passed or failed."
+  total:
+    description: Number of report cases.
+  passed:
+    description: Number of passed cases.
+  failed:
+    description: Number of failed cases.
+  non-strict:
+    description: Number of non-strict cases.
+  informational:
+    description: Number of informational cases.
+  policy:
+    description: Failure policy used for this run.
+  report-dir:
+    description: Absolute report directory path.
+  index-path:
+    description: Absolute path to the decoded Autobahn index.json.
+  summary-path:
+    description: Absolute path to the JSON summary.
+  markdown-path:
+    description: Absolute path to the Markdown summary.
+  artifact-id:
+    description: Uploaded artifact ID, or empty when the upload was skipped or failed.
+  artifact-url:
+    description: Uploaded artifact URL, or empty when unavailable.
+  artifact-size:
+    description: Uploaded artifact size in bytes, or empty when unavailable.
+  artifact-digest:
+    description: Uploaded artifact digest, or empty when unavailable.
+
+runs:
+  using: node24
+  main: dist/index.cjs
