@@ -68,8 +68,8 @@ binary is a development tool and is not distributed with this repository.
 
 `@actions/artifact` brings transitive dependencies for the artifact backend,
 including the Actions HTTP client, Octokit, and the Azure Blob Storage client.
-Their licenses are recorded in `pnpm-lock.yaml` and remain upstream MIT or
-Apache-2.0 material; no vendored source is added here.
+They remain upstream MIT or Apache-2.0 material; their exact versions are
+pinned in `pnpm-lock.yaml`, and no vendored source is added here.
 
 ## Development Dependencies
 
@@ -79,5 +79,7 @@ Apache-2.0 material; no vendored source is added here.
 | `ws`        | 8.23.1  | MIT     | WebSocket echo server fixture and tests    |
 | `@types/ws` | 8.18.2  | MIT     | Type declarations for the fixture          |
 
-Development dependencies are not distributed with the action. `esbuild` output
-in `dist/index.cjs` contains bundled runtime dependencies, not the build tool.
+Development dependencies are not distributed with the action. The committed
+`dist/index.cjs` bundles the runtime dependencies, not the development tools.
+The bundled dependency set is the one pinned in `pnpm-lock.yaml`; the bundle
+adds no new upstream license beyond that lockfile.

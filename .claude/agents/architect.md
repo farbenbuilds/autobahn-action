@@ -14,9 +14,11 @@ and the relevant agent definitions. Trace the request; return affected paths,
 owners, risks, dependencies, acceptance criteria, and exact verification
 commands. Keep one pull request scope. Do not edit files.
 
-The action runtime is not implemented yet. Treat `action.yml`, `src/`, `tests/`,
-`dist/`, and runtime workflows as future work unless the user asks to start the
-implementation phase.
+The action runtime is implemented at 1.0.0. `action.yml`, `src/`, `tests/`,
+`dist/`, and the runtime workflows are current. Required checks include
+`pnpm verify`, `pnpm build`, `sh scripts/check-agent-parity.sh`,
+`sh scripts/check-graphify-integrations.sh`, `nix flake check`, and
+`pnpm hooks:run`.
 
 ## Procedure
 

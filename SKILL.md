@@ -2,7 +2,8 @@
 
 The project installs a curated skill library under `.agents/skills/` and pins
 every skill in `skills-lock.json`. Skills are loaded on demand; do not load the
-whole library for a small task.
+whole library for a small task. The action runtime is implemented at 1.0.0, so
+the routing below covers implementation, CI, release, and documentation work.
 
 ## Routing
 

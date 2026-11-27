@@ -62,7 +62,8 @@ Reviewers reject a change that violates them instead of negotiating them.
   represent mutually exclusive states.
 - Name every value that crosses a function boundary. Do not use broad `object`
   parameters or `Record<string, unknown>` as a domain contract.
-- Use plain records and arrays in domain types.
+- Use plain records and arrays in domain types. Do not add `readonly`
+  modifiers.
 - Export explicit return types from module boundaries. Local inference is
   fine.
 
@@ -138,11 +139,13 @@ Before requesting review:
 
 ```sh
 pnpm check
+pnpm build
+pnpm typecheck
+pnpm test
 sh scripts/check-graphify-integrations.sh
 nix flake check
 pnpm hooks:run
 ```
 
-Implementation changes add `pnpm build`, `pnpm typecheck`, `pnpm test`, and the
-action self-test workflow. Report commands and their actual outcomes. Never
-claim a check that was not run.
+The action self-test runs in `.github/workflows/test.yml`. Report commands and
+their actual outcomes. Never claim a check that was not run.

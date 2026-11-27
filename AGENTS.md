@@ -3,7 +3,7 @@
 ## Project
 
 `autobahn-action` packages the Autobahn WebSocket testsuite as a GitHub
-Action. A consumer will write one step:
+Action. A consumer writes one step:
 
 ```yaml
 - uses: farbenbuilds/autobahn-action@v1
@@ -11,28 +11,28 @@ Action. A consumer will write one step:
     server-command: node dist/server.js
 ```
 
-The action will start the server under test, run the digest-pinned
-`crossbario/autobahn-testsuite` image, read the report, write a JSON and
-Markdown summary, annotate failures, and exit with the configured policy.
+The action starts the server under test, runs the digest-pinned
+`crossbario/autobahn-testsuite` image, reads the report, writes a JSON and
+Markdown summary, annotates failures, and exits with the configured policy.
 
-Implementation is in progress. The runtime, `action.yml`, and the committed
-`dist/index.cjs` bundle are present; the runtime workflows, the local Docker
-self-test, and the final documentation pass land in the remaining slices.
+The project is implemented at 1.0.0. `action.yml`, the runtime, the unit tests,
+the committed `dist/index.cjs` bundle, and `test.yml` are current. `v1.0.0` is
+the immutable release tag; `v1` is the moving major alias used by consumers.
 
 ## Documentation Map
 
-| Document                                                     | Read it for                                        |
-| ------------------------------------------------------------ | -------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)                                       | Canonical rules for every coding agent             |
-| [AGENT_DIRECTORY.md](AGENT_DIRECTORY.md)                     | Roster, ownership, handoffs, skill coverage        |
-| [CODING_CONVENTION.md](CODING_CONVENTION.md)                 | Non-negotiable coding rules                        |
-| [CODEBASE.md](CODEBASE.md)                                   | Architecture, planned module boundaries, data flow |
-| [CLAUDE.md](CLAUDE.md)                                       | Claude Code entry point                            |
-| [SKILL.md](SKILL.md)                                         | Human-readable skill routing                       |
-| [CONTRIBUTE.md](CONTRIBUTE.md)                               | Environment, commands, branch and PR process       |
-| [SECURITY.md](SECURITY.md)                                   | Trust boundaries and vulnerability reporting       |
-| [.github/COMMIT_CONVENTION.md](.github/COMMIT_CONVENTION.md) | Commit message format                              |
-| [.github/dependabot.yml](.github/dependabot.yml)             | Dependency update policy                           |
+| Document                                                     | Read it for                                  |
+| ------------------------------------------------------------ | -------------------------------------------- |
+| [AGENTS.md](AGENTS.md)                                       | Canonical rules for every coding agent       |
+| [AGENT_DIRECTORY.md](AGENT_DIRECTORY.md)                     | Roster, ownership, handoffs, skill coverage  |
+| [CODING_CONVENTION.md](CODING_CONVENTION.md)                 | Non-negotiable coding rules                  |
+| [CODEBASE.md](CODEBASE.md)                                   | Architecture, module boundaries, data flow   |
+| [CLAUDE.md](CLAUDE.md)                                       | Claude Code entry point                      |
+| [SKILL.md](SKILL.md)                                         | Human-readable skill routing                 |
+| [CONTRIBUTE.md](CONTRIBUTE.md)                               | Environment, commands, branch and PR process |
+| [SECURITY.md](SECURITY.md)                                   | Trust boundaries and vulnerability reporting |
+| [.github/COMMIT_CONVENTION.md](.github/COMMIT_CONVENTION.md) | Commit message format                        |
+| [.github/dependabot.yml](.github/dependabot.yml)             | Dependency update policy                     |
 
 ## Non-Negotiable Rules
 
@@ -52,9 +52,9 @@ self-test, and the final documentation pass land in the remaining slices.
 - Named, explicit, flat types. No `any`, no `unknown` parameters or returns,
   no unchecked casts, no non-null assertions, no enums, no `typeof` narrowing
   outside a boundary decoder.
-- External data is decoded at the boundary before it enters the domain. When
-  runtime code lands, use the repository schema library and infer the type from
-  the schema.
+- Domain data is plain records and arrays. Do not add `readonly` modifiers.
+- External data is decoded at the boundary before it enters the domain. Use the
+  repository schema library and infer the type from the schema.
 - TypeScript strict mode, semicolons, double quotes, and trailing commas.
   Oxfmt owns formatting; do not hand-format around it.
 - Files are kebab-case. Types are `PascalCase`; functions and variables are
@@ -87,20 +87,16 @@ pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check
 pnpm hooks:install         # install Lefthook hooks
 pnpm hooks:run             # Lefthook over every file
-nix flake check            # flake formatting and evaluation
+nix flake check            # flake formatting, package, and version checks
 sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```
 
-Implementation changes also run:
-
-```sh
-pnpm build
-pnpm typecheck
-pnpm test
-```
-
-The runtime self-test workflow lands with the CI slice.
+Action changes also run `pnpm build`, plus `pnpm typecheck` and `pnpm test`, or
+`pnpm verify` for the check, typecheck, and test passes. `.github/workflows/test.yml`
+runs `pnpm verify`, rebuilds the bundle, and runs the Autobahn self-test. The
+lint job runs in the `Linting` environment; every `test.yml` job runs in the
+`Testing` environment.
 
 ## Agent Team
 

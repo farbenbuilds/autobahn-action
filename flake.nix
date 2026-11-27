@@ -18,6 +18,7 @@
       ];
 
       perSystem = {pkgs, ...}: let
+        version = "1.0.0";
         lib = pkgs.lib;
         isLinux = pkgs.stdenv.hostPlatform.isLinux;
         pkgsMusl =
@@ -45,6 +46,22 @@
       in {
         formatter = pkgs.alejandra;
 
+        packages.default =
+          pkgs.runCommand "autobahn-action-${version}" {
+            meta = {
+              description = "GitHub Action that runs the Autobahn WebSocket testsuite";
+              homepage = "https://github.com/farbenbuilds/autobahn-action";
+              license = pkgs.lib.licenses.mit;
+            };
+          } ''
+            mkdir -p $out
+            cp ${./action.yml} $out/action.yml
+            cp -R ${./dist} $out/dist
+            cp ${./README.md} $out/README.md
+            cp ${./LICENSE} $out/LICENSE
+            cp ${./package.json} $out/package.json
+          '';
+
         devShells =
           {
             default = mkDevShell pkgs pnpm [
@@ -68,6 +85,13 @@
             alejandra --check $(find ${./.} -name '*.nix' ! -path '*/node_modules/*')
             touch $out
           '';
+
+        checks.version = pkgs.runCommand "check-version" {} ''
+          grep -q '"version": "1.0.0"' ${./package.json}
+          test -f ${./action.yml}
+          test -f ${./dist/index.cjs}
+          touch $out
+        '';
       };
     };
 }

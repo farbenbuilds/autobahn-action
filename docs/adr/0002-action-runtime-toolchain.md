@@ -3,22 +3,24 @@
 ## Status
 
 Accepted on 2026-11-28. Amended by
-[ADR 0003](0003-automatic-report-artifact-upload.md): `@actions/artifact` is
-now a planned runtime dependency, and by
-[ADR 0004](0004-arktype-report-decoder.md): the report boundary uses ArkType
-2.2.10.
+[ADR 0003](0003-automatic-report-artifact-upload.md): `@actions/artifact` is a
+runtime dependency, and by [ADR 0004](0004-arktype-report-decoder.md): the
+report boundary uses ArkType 2.2.10.
+
+Amendment: the original Zod choice for the report boundary is superseded by
+ADR 0004. The esbuild, `node:test`, `@actions/core`, and `@actions/exec`
+decisions remain current.
 
 ## Context
 
-The action will be a JavaScript GitHub Action on the Node 24 runtime. It must
-run subprocesses, decode untrusted report JSON, write files, publish outputs,
-and ship as a single committed entry point. The implementation is deliberately
-deferred, but the dependency choices affect the module layout, the security
-boundary, and the release process.
+The action is a JavaScript GitHub Action on the Node 24 runtime. It runs
+subprocesses, decodes untrusted report JSON, writes files, publishes outputs,
+and ships as a single committed entry point. The dependency choices affect the
+module layout, the security boundary, and the release process.
 
-The setup originally had no runtime dependency. ADR 0003 adds
-`@actions/artifact`, and ADR 0004 replaces the original report boundary schema
-library. The other decisions here still apply.
+The original setup had no runtime dependency. ADR 0003 adds
+`@actions/artifact`, and ADR 0004 replaces the original Zod report boundary
+schema library with ArkType. The other decisions here still apply.
 
 ## Decision
 
@@ -70,7 +72,8 @@ lockfile; do not hand-edit `dist`.
 Use ArkType 2.2.10 at the report boundary. `servers/index.json` is untrusted,
 and the anti-slop rules reject unchecked casts and `unknown` domain contracts.
 The schema is the source of the decoded report type. ADR 0004 records the
-nested index-signature schema and error handling.
+nested index-signature schema and error handling, superseding the original Zod
+choice.
 
 ### node:test: yes
 

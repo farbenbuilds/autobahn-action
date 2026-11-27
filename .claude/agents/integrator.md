@@ -42,15 +42,17 @@ say so in the report.
 
 ```sh
 pnpm check
+pnpm build
+pnpm typecheck
+pnpm test
 sh scripts/check-graphify-integrations.sh
 nix flake check
 pnpm hooks:run
 ```
 
-Implementation changes add `pnpm build`, `pnpm typecheck`, `pnpm test`, and the
-action self-test workflow. Report blockers and the final summary. Every opened
-or updated pull request is assigned to its owner and carries at least one
-existing repository label.
+The action self-test runs in `.github/workflows/test.yml`. Report blockers and
+the final summary. Every opened or updated pull request is assigned to its
+owner and carries at least one existing repository label.
 
 ## Shared Rules
 
