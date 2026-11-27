@@ -73,8 +73,9 @@ The full contract is [CODING_CONVENTION.md](CODING_CONVENTION.md).
 - Node.js 24 or newer and pnpm 12.4.2.
 - Oxlint with the vendored anti-slop plugin and local project rules.
 - Oxfmt with the repository configuration.
-- Nix flake with default glibc and musl dev shells; `.envrc` selects the host
-  libc automatically.
+- Nix flake with default glibc and musl dev shells. `.envrc` loads the glibc
+  shell automatically; on musl it uses host Node and pnpm unless they are
+  missing, and `nix develop .#musl` remains the explicit pinned shell.
 - Lefthook for commit-message and pre-commit checks.
 - `graphify` for codebase queries and the project knowledge graph.
 

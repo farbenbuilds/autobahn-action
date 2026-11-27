@@ -21,8 +21,8 @@ All notable changes to this project are documented here. The format follows
   Google Antigravity, Claude Code, and Codex.
 - Graphify integrations for the same four clients, plus refresh and verification
   scripts.
-- Nix flake with default glibc and musl development shells and automatic
-  `.envrc` selection.
+- Nix flake with default glibc and musl development shells and direnv libc
+  selection.
 - GitHub issue templates, pull request template, code of conduct, commit
   convention, funding metadata, and Dependabot configuration.
 - Agent parity checks, CODEOWNERS, and ADR 0001 recording the four-client
@@ -31,6 +31,8 @@ All notable changes to this project are documented here. The format follows
   as dependencies, direct `node:child_process`, `node:test`, esbuild, and no
   `@actions/exec` or `@vercel/ncc`.
 - `@actions/core` 3.0.1 and `@actions/artifact` 6.3.1 as runtime dependencies.
+- Fast musl direnv startup: host Node and pnpm are used when present, with
+  `nix develop .#musl` kept as the explicit pinned shell.
 - ADR 0003 defining automatic report upload, artifact naming, retention,
   outputs, GHES fallback, and failure behavior.
 
