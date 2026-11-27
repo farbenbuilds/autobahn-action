@@ -41,6 +41,9 @@ pre-commit:
     - name: conventions
       run: node scripts/check-conventions.mjs
 
+    - name: agents
+      run: sh scripts/check-agent-parity.sh
+
     - name: skills-lock
       run: node scripts/check-skills-lock.mjs
 

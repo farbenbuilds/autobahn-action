@@ -43,5 +43,8 @@ jobs:
       - name: Check skills lock
         run: pnpm check:skills
 
+      - name: Check agent parity
+        run: pnpm check:agents
+
       - name: Check graphify integrations
         run: sh scripts/check-graphify-integrations.sh

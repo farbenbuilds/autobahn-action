@@ -88,6 +88,7 @@ pnpm format:check          # Oxfmt check
 pnpm hooks:install         # install Lefthook hooks
 pnpm hooks:run             # Lefthook over every file
 nix flake check            # flake formatting and evaluation
+sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```
 
@@ -166,6 +167,7 @@ installed for the four supported clients only:
   and `.agents/workflows/graphify.md`
 
 Refresh with `sh scripts/install-graphify-integrations.sh` and verify with
+`sh scripts/check-agent-parity.sh` and
 `sh scripts/check-graphify-integrations.sh`.
 
 ## Security Boundaries

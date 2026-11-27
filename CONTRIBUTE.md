@@ -32,6 +32,7 @@ pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check
 nix flake check            # Nix formatting and evaluation
 pnpm hooks:run # staged-file and repository hooks
+sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```
 
