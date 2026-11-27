@@ -18,6 +18,3 @@ graphify-out/
 .DS_Store
 .vscode/
 *.swp
-
-# package manager metadata that pnpm creates for build approvals
-pnpm-workspace.yaml

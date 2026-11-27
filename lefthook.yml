@@ -1,0 +1,49 @@
+# Lefthook configuration: https://lefthook.dev/configuration/
+# Install with `pnpm run hooks:install`; run manually with
+# `pnpm exec lefthook run pre-commit --all-files`.
+
+min_version: 2.2.4
+glob_matcher: doublestar
+
+commit-msg:
+  commands:
+    no-skip-marker:
+      run: node scripts/check-commit-msg.mjs {1}
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: oxlint
+      glob: "**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"
+      exclude:
+        - ".agents/**"
+        - ".claude/**"
+        - ".codex/**"
+        - ".opencode/**"
+        - "node_modules/**"
+        - "tools/oxlint/anti-slop/**"
+      run: pnpm exec oxlint --fix {staged_files}
+      stage_fixed: true
+
+    - name: oxfmt
+      glob: "**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,md,mdx,yaml,yml}"
+      exclude:
+        - ".agents/**"
+        - ".claude/**"
+        - ".codex/**"
+        - ".opencode/**"
+        - "node_modules/**"
+        - "tools/oxlint/anti-slop/**"
+        - "pnpm-lock.yaml"
+      run: pnpm exec oxfmt {staged_files}
+      stage_fixed: true
+
+    - name: conventions
+      run: node scripts/check-conventions.mjs
+
+    - name: skills-lock
+      run: node scripts/check-skills-lock.mjs
+
+    - name: graphify
+      glob: "**/*.{md,toml,json,js,sh}"
+      run: sh scripts/check-graphify-integrations.sh
