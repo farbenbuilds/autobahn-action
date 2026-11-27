@@ -1,0 +1,27 @@
+{
+  "name": "autobahn-action",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Action that runs the Autobahn WebSocket testsuite against a server.",
+  "license": "MIT",
+  "author": "Farben",
+  "type": "module",
+  "scripts": {
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint && node scripts/check-conventions.mjs",
+    "lint:fix": "oxlint --fix",
+    "check": "pnpm lint && pnpm format:check"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.95.0",
+    "@types/node": "24.10.1",
+    "oxfmt": "0.80.0",
+    "oxlint": "1.95.0",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@12.4.2"
+}

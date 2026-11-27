@@ -1,0 +1,23 @@
+# node
+node_modules/
+coverage/
+*.log
+*.tsbuildinfo
+
+# generated reports
+autobahn-reports/
+
+# nix
+.direnv/
+result
+
+# graphify
+graphify-out/
+
+# os / editors
+.DS_Store
+.vscode/
+*.swp
+
+# package manager metadata that pnpm creates for build approvals
+pnpm-workspace.yaml
