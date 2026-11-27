@@ -82,9 +82,13 @@ pinned in `pnpm-lock.yaml`, and no vendored source is added here.
 
 | Package     | Version | License | Purpose                                    |
 | ----------- | ------- | ------- | ------------------------------------------ |
-| `esbuild`   | 0.28.2  | MIT     | Bundle `src/main.ts` into `dist/index.cjs` |
+| `rolldown`  | 1.3.4   | MIT     | Bundle `src/main.ts` into `dist/index.cjs` |
 | `ws`        | 8.23.1  | MIT     | WebSocket echo server fixture and tests    |
 | `@types/ws` | 8.18.2  | MIT     | Type declarations for the fixture          |
+
+Rolldown installs platform-specific native binding packages as optional
+transitive dependencies. They are development tools, recorded in
+`pnpm-lock.yaml`, and are not part of the committed bundle.
 
 Development dependencies are not distributed with the action. The committed
 `dist/index.cjs` bundles the runtime dependencies, not the development tools.

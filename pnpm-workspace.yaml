@@ -1,5 +1,4 @@
 allowBuilds:
-  esbuild: true
   lefthook: true
 minimumReleaseAgeExclude:
   - ws@8.23.1

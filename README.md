@@ -136,10 +136,11 @@ runs the unit tests, and runs the action against the echo server.
 ## Design notes
 
 The action uses `@actions/core`, `@actions/artifact`, `arktype` 2.2.10,
-`node:child_process`, `node:test`, and esbuild. The reasoning is in
+`node:child_process`, `node:test`, and Rolldown 1.3.4. The reasoning is in
 [ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
-[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
-[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md),
+[ADR 0004](docs/adr/0004-arktype-report-decoder.md), and
+[ADR 0005](docs/adr/0005-rolldown-release-bundle.md).
 
 ## Attribution
 

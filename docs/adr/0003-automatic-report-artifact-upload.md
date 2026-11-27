@@ -87,7 +87,7 @@ v1 uses the older artifact backend and is out of maintenance. v6 is what
 - Runtime dependencies become `@actions/core`, `@actions/artifact`, and
   `arktype` 2.2.10.
 - The dev tree grows by the artifact client's transitive dependencies. The
-  action bundle grows, but esbuild bundles only the reachable code.
+  action bundle grows, but Rolldown bundles only the reachable code.
 - The action works on GitHub-hosted and self-hosted runners with access to the
   Actions artifact endpoints.
 - `@actions/artifact` v2+ is not supported on GHES yet. On GHES the action
