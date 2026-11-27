@@ -109,6 +109,7 @@ shells provide Node, pnpm, TypeScript, lefthook, and the formatters.
 | `pnpm format:check`                         | Oxfmt check                               |
 | `pnpm hooks:run`                            | Lefthook over every file                  |
 | `nix flake check`                           | Nix formatting and flake evaluation       |
+| `pnpm check:agents`                         | Role and skill parity across four clients |
 | `sh scripts/check-graphify-integrations.sh` | Four-client graphify parity               |
 
 ## Agent System
@@ -120,8 +121,9 @@ and `reviewer`, with matching definitions under `.opencode/agents/`,
 
 Skills are installed under `.agents/skills/` and pinned in
 `skills-lock.json`. Graphify is installed for all four clients. See
-[AGENTS.md](AGENTS.md), [AGENT_DIRECTORY.md](AGENT_DIRECTORY.md), and
-[SKILL.md](SKILL.md).
+[AGENTS.md](AGENTS.md), [AGENT_DIRECTORY.md](AGENT_DIRECTORY.md),
+[SKILL.md](SKILL.md), and
+[docs/adr/0001-four-agent-clients.md](docs/adr/0001-four-agent-clients.md).
 
 ## Contributing
 

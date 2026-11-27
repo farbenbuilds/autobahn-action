@@ -29,7 +29,9 @@ and the reviewer still gates the result.
 | Codex              | `.codex/agents/<role>.toml`  | `.codex/skills/graphify/`, `.codex/hooks.json`                                           |
 
 Codex team procedure: `.codex/TEAM_WORKFLOW.md`. Claude entry point:
-`CLAUDE.md`. Shared skills: `.agents/skills/<name>/SKILL.md`.
+`CLAUDE.md`. Shared skills: `.agents/skills/<name>/SKILL.md`. The four-client
+decision is recorded in
+[docs/adr/0001-four-agent-clients.md](docs/adr/0001-four-agent-clients.md).
 
 ## Ownership
 
@@ -71,6 +73,7 @@ Setup and documentation changes:
 
 ```sh
 pnpm check
+sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 nix flake check
 pnpm hooks:run

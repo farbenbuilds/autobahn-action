@@ -11,10 +11,11 @@
     "format:check": "oxfmt --check",
     "lint": "oxlint && node scripts/check-conventions.mjs",
     "lint:fix": "oxlint --fix",
-    "check": "pnpm lint && pnpm format:check && pnpm check:skills",
+    "check": "pnpm lint && pnpm format:check && pnpm check:skills && pnpm check:agents",
     "hooks:install": "lefthook install",
     "hooks:run": "lefthook run pre-commit --all-files",
-    "check:skills": "node scripts/check-skills-lock.mjs"
+    "check:skills": "node scripts/check-skills-lock.mjs",
+    "check:agents": "sh scripts/check-agent-parity.sh"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.95.0",

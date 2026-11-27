@@ -7,7 +7,8 @@ which proves the repository system:
 
 - install dependencies with a frozen lockfile
 - run Oxlint, convention checks, and Oxfmt
-- verify the four graphify integrations and their version parity
+- verify the four agent definitions, the four graphify integrations, and their
+  version parity
 
 The workflow does not build, test, publish, or run an action that does not
 exist. Nix checking is local until an environment workflow is added.
@@ -33,6 +34,7 @@ Setup-phase checks:
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
+sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```
 
