@@ -28,8 +28,8 @@ All notable changes to this project are documented here. The format follows
 - Agent parity checks, CODEOWNERS, and ADR 0001 recording the four-client
   decision.
 - ADR 0002 recording the action runtime toolchain: `@actions/core` as the
-  runner interface, direct `node:child_process`, `node:test`, esbuild, and no
-  `@actions/exec` or `@vercel/ncc`.
+  runner interface, direct `node:child_process`, `node:test`, the original
+  esbuild bundle choice, and no `@actions/exec` or `@vercel/ncc`.
 - `@actions/core` 3.0.1 and `@actions/artifact` 6.3.1 as runtime dependencies.
 - Fast musl direnv startup: the musl shell keeps only the cached Node and
   pnpm closure and aligns its nixpkgs pin with the sibling ventiws flake.
@@ -37,6 +37,8 @@ All notable changes to this project are documented here. The format follows
   outputs, GHES fallback, and failure behavior.
 - ADR 0004 recording ArkType 2.2.10 as the report boundary decoder and
   superseding ADR 0002's earlier schema-library choice.
+- ADR 0005 recording Rolldown 1.3.4 as the release bundle tool, superseding
+  ADR 0002's esbuild choice with a smaller deterministic bundle.
 - Runtime core: validated action inputs, canonical Autobahn case defaults,
   fuzzingclient configuration builder, Docker network and argument planning,
   and `typecheck`, `test`, and `verify` scripts.
@@ -50,9 +52,10 @@ All notable changes to this project are documented here. The format follows
 - Automatic report artifact upload with skip handling for non-Actions runners,
   missing runtime configuration, and unsupported GitHub Enterprise Server hosts.
 - Action contract in `action.yml` with every input, default, and output, the
-  Node 24 entry point, and the committed `dist/index.cjs` esbuild bundle.
-- esbuild 0.28.2 and `ws` 8.23.1 as development dependencies, plus a WebSocket
-  echo server fixture for the self-test.
+  Node 24 entry point, and the committed `dist/index.cjs` Rolldown bundle.
+- Rolldown 1.3.4 and `ws` 8.23.1 as development dependencies, plus a WebSocket
+  echo server fixture for the self-test. Rolldown replaces esbuild for the
+  release bundle.
 - `test.yml` with unit, bundle, and Autobahn self-test jobs, the `Testing`
   environment, and a verification gate that fails on a failed or cancelled
   dependency, plus the `Linting` environment in `lint.yml`.

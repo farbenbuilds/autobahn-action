@@ -41,15 +41,15 @@ pre-commit:
       stage_fixed: true
 
     - name: build
-      glob: "{src/**/*.ts,scripts/build.mjs,package.json,pnpm-lock.yaml}"
+      glob: "{src/**/*.ts,rolldown.config.ts,package.json,pnpm-lock.yaml}"
       run: pnpm build && git add dist/index.cjs
 
     - name: typecheck
-      glob: "{src/**/*.ts,tests/**/*.ts,scripts/**/*.mjs,tsconfig.json,package.json}"
+      glob: "{src/**/*.ts,tests/**/*.ts,scripts/**/*.mjs,rolldown.config.ts,tsconfig.json,package.json}"
       run: pnpm typecheck
 
     - name: test
-      glob: "{src/**/*.ts,tests/**/*.ts,scripts/build.mjs,package.json}"
+      glob: "{src/**/*.ts,tests/**/*.ts,rolldown.config.ts,package.json}"
       run: pnpm test
 
     - name: conventions

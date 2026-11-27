@@ -7,7 +7,7 @@
   "author": "Farben",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "rolldown -c rolldown.config.ts",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "lint": "oxlint && node scripts/check-conventions.mjs",
@@ -30,10 +30,10 @@
     "@oxlint/plugins": "1.95.0",
     "@types/node": "24.19.2",
     "@types/ws": "8.18.2",
-    "esbuild": "0.28.2",
     "lefthook": "2.2.4",
     "oxfmt": "0.80.0",
     "oxlint": "1.95.0",
+    "rolldown": "1.3.4",
     "typescript": "7.0.2",
     "ws": "8.23.1"
   },

@@ -4,12 +4,14 @@
 
 Accepted on 2026-11-28. Amended by
 [ADR 0003](0003-automatic-report-artifact-upload.md): `@actions/artifact` is a
-runtime dependency, and by [ADR 0004](0004-arktype-report-decoder.md): the
-report boundary uses ArkType 2.2.10.
+runtime dependency, by [ADR 0004](0004-arktype-report-decoder.md): the report
+boundary uses ArkType 2.2.10, and by
+[ADR 0005](0005-rolldown-release-bundle.md): the release bundle uses Rolldown
+1.3.4.
 
 Amendment: the original Zod choice for the report boundary is superseded by
-ADR 0004. The esbuild, `node:test`, `@actions/core`, and `@actions/exec`
-decisions remain current.
+ADR 0004. The original esbuild choice is superseded by ADR 0005. The
+`node:test`, `@actions/core`, and `@actions/exec` decisions remain current.
 
 ## Context
 
@@ -19,8 +21,9 @@ and ships as a single committed entry point. The dependency choices affect the
 module layout, the security boundary, and the release process.
 
 The original setup had no runtime dependency. ADR 0003 adds
-`@actions/artifact`, and ADR 0004 replaces the original Zod report boundary
-schema library with ArkType. The other decisions here still apply.
+`@actions/artifact`, ADR 0004 replaces the original Zod report boundary
+schema library with ArkType, and ADR 0005 replaces esbuild with Rolldown. The
+remaining decisions here still apply.
 
 ## Decision
 
@@ -56,13 +59,16 @@ gets a downloadable result without a second step. See
 
 ### @vercel/ncc: no
 
-Bundle with esbuild from `scripts/build.mjs`.
+Bundle from the root `rolldown.config.ts` with
+`rolldown -c rolldown.config.ts`. The original choice was esbuild; ADR 0005
+supersedes it with Rolldown 1.3.4.
 
 `ncc` is the older default for JavaScript actions, but it is slow, opaque, and
-adds a second package manager surface. esbuild produces one CommonJS file for
-the Node 24 runner, bundles runtime dependencies, and is fast enough to run on
-every verification pass. The generated `dist/index.cjs` is committed because a
-consumer's runner does not run the repository build.
+adds a second package manager surface. The esbuild decision produced one
+CommonJS file for the Node 24 runner, bundled runtime dependencies, and was
+fast enough to run on every verification pass. ADR 0005 keeps that shape with a
+smaller deterministic Rolldown bundle. The generated `dist/index.cjs` is
+committed because a consumer's runner does not run the repository build.
 
 The bundle is generated output. Review the source, the build script, and the
 lockfile; do not hand-edit `dist`.

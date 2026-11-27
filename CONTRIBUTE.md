@@ -23,7 +23,8 @@ pnpm verify
 
 `pnpm verify` runs linting, convention checks, the format check, the TypeScript
 check, and the unit tests. `pnpm build` produces the committed
-`dist/index.cjs` bundle with esbuild. Rebuild and diff `dist/` before review.
+`dist/index.cjs` bundle with Rolldown 1.3.4. Rebuild and diff `dist/` before
+review.
 The Docker self-test runs in `.github/workflows/test.yml`; `test.yml` also
 rebuilds the bundle and checks the committed copy.
 
@@ -35,7 +36,7 @@ pnpm lint                  # Oxlint plus scripts/check-conventions.mjs
 pnpm lint:fix              # safe Oxlint fixes
 pnpm typecheck             # TypeScript check
 pnpm test                  # node:test unit suite
-pnpm build                 # esbuild bundle to dist/index.cjs
+pnpm build                 # Rolldown bundle to dist/index.cjs
 pnpm verify                # check, typecheck, and tests
 pnpm format                # Oxfmt write
 pnpm format:check          # Oxfmt check

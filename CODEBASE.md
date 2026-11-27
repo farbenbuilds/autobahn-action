@@ -33,6 +33,7 @@ surface is `action.yml`:
 
 ```text
 action.yml                    public input and output contract
+rolldown.config.ts            release bundle entry point and output options
 src/
   main.ts                     action entry point and failure boundary
   action/
@@ -68,7 +69,6 @@ tests/
   fixtures/
     echo-server.mjs           WebSocket echo server for the self-test
 scripts/
-  build.mjs                   esbuild bundle of the entry point
   check-conventions.mjs       mechanical repository checks
   check-agent-parity.sh       four-client role and skill parity
   check-graphify-integrations.sh
@@ -88,10 +88,13 @@ and never add a numbered continuation file.
 Runtime dependencies are `@actions/core` for the runner interface,
 `@actions/artifact` for report upload, and `arktype` 2.2.10 for boundary
 decoding. Subprocesses use `node:child_process` directly; tests use
-`node:test`. The bundler is esbuild, not `@vercel/ncc`. The reasoning is in
+`node:test`. The bundler is Rolldown 1.3.4, configured by the root
+`rolldown.config.ts` and run with `rolldown -c rolldown.config.ts`, not
+`@vercel/ncc`. The reasoning is in
 [ADR 0002](docs/adr/0002-action-runtime-toolchain.md),
-[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md), and
-[ADR 0004](docs/adr/0004-arktype-report-decoder.md).
+[ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md),
+[ADR 0004](docs/adr/0004-arktype-report-decoder.md), and
+[ADR 0005](docs/adr/0005-rolldown-release-bundle.md).
 
 ## Data Flow
 
