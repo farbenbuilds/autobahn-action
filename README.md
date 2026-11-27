@@ -7,9 +7,11 @@ from a GitHub Actions workflow.
 
 ## Status
 
-Setup phase. The repository ships the toolchain, agent system, skill library,
-and Nix environment. The action runtime, `action.yml`, tests, bundle, and
-Autobahn workflow land in the implementation phase.
+The runtime is under active implementation. The action input, configuration,
+and Docker planning core has landed with unit tests, but this is not yet a
+consumable action. `action.yml`, the runtime entry point, the report pipeline,
+the committed bundle, and the Autobahn workflow land in the remaining
+implementation slices.
 
 The planned consumer experience is one step:
 
@@ -28,7 +30,7 @@ jobs:
   autobahn:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: npm ci
       - run: npm run build
 
@@ -48,25 +50,25 @@ and fail according to the configured policy.
 
 ## Planned Inputs
 
-| Input                      | Default               | Purpose                                   |
-| -------------------------- | --------------------- | ----------------------------------------- |
-| `url`                      | `ws://127.0.0.1:9001` | WebSocket target                          |
-| `server-command`           | empty                 | Optional command that starts the server   |
-| `server-working-directory` | `.`                   | Working directory for the command         |
-| `server-ready-timeout`     | `30`                  | Seconds to wait for a handshake           |
-| `cases`                    | `*`                   | Comma- or space-separated case patterns   |
-| `exclude-cases`            | empty                 | Case patterns to skip                     |
-| `agent`                    | `autobahn-action`     | Agent key in the report                   |
-| `report-dir`               | `autobahn-reports`    | Report, summary, and Markdown output      |
-| `docker-image`             | pinned digest         | Autobahn testsuite image                  |
-| `docker-network`           | `auto`                | `auto`, `host`, or `bridge`               |
-| `timeout`                  | `1800`                | Seconds allowed for the container         |
-| `fail-on`                  | `failed`              | `failed`, `non-strict`, or `never`        |
-| `summary`                  | `true`                | Append the report to the step summary     |
-| `annotate`                 | `true`                | Annotate failed cases in the log          |
-| `upload-artifact`          | `true`                | Upload the report as a workflow artifact  |
-| `artifact-name`            | `autobahn-report`     | Artifact name; unique per run             |
-| `retention-days`           | `30`                  | Artifact retention; `0` uses repo default |
+| Input                      | Default                    | Purpose                                   |
+| -------------------------- | -------------------------- | ----------------------------------------- |
+| `url`                      | `ws://127.0.0.1:9001`      | WebSocket target                          |
+| `server-command`           | empty                      | Optional command that starts the server   |
+| `server-working-directory` | `.`                        | Working directory for the command         |
+| `server-ready-timeout`     | `30`                       | Seconds to wait for a handshake           |
+| `cases`                    | `1.*`-`7.*`, `9.*`, `10.*` | Comma- or space-separated case patterns   |
+| `exclude-cases`            | empty                      | Case patterns to skip                     |
+| `agent`                    | `autobahn-action`          | Agent key in the report                   |
+| `report-dir`               | `autobahn-reports`         | Report, summary, and Markdown output      |
+| `docker-image`             | pinned digest              | Autobahn testsuite image                  |
+| `docker-network`           | `auto`                     | `auto`, `host`, or `bridge`               |
+| `timeout`                  | `1800`                     | Seconds allowed for the container         |
+| `fail-on`                  | `failed`                   | `failed`, `non-strict`, or `never`        |
+| `summary`                  | `true`                     | Append the report to the step summary     |
+| `annotate`                 | `true`                     | Annotate failed cases in the log          |
+| `upload-artifact`          | `true`                     | Upload the report as a workflow artifact  |
+| `artifact-name`            | `autobahn-report`          | Artifact name; unique per run             |
+| `retention-days`           | `30`                       | Artifact retention; `0` uses repo default |
 
 ## Planned Outputs
 
@@ -77,10 +79,9 @@ and fail according to the configured policy.
 ## Design Notes
 
 Runtime choices: `@actions/core` for the runner interface, `@actions/artifact`
-for automatic report upload, `zod` for untrusted report decoding,
-`node:child_process` for explicit subprocess control, `node:test` for tests,
-and esbuild for the committed bundle. There is no `@actions/exec` and no
-`@vercel/ncc`. See
+for automatic report upload, `node:child_process` for explicit subprocess
+control, `node:test` for tests, and esbuild for the committed bundle. There is
+no `@actions/exec` and no `@vercel/ncc`. See
 [docs/adr/0002-action-runtime-toolchain.md](docs/adr/0002-action-runtime-toolchain.md)
 and
 [docs/adr/0003-automatic-report-artifact-upload.md](docs/adr/0003-automatic-report-artifact-upload.md).
@@ -118,6 +119,9 @@ the formatters. Lefthook is installed by pnpm.
 | `pnpm check`                                | Lint, convention checks, and format check |
 | `pnpm lint`                                 | Oxlint plus repository conventions        |
 | `pnpm lint:fix`                             | Safe Oxlint fixes                         |
+| `pnpm typecheck`                            | TypeScript check                          |
+| `pnpm test`                                 | Unit tests with `node:test`               |
+| `pnpm verify`                               | Check, typecheck, and tests               |
 | `pnpm format`                               | Oxfmt write                               |
 | `pnpm format:check`                         | Oxfmt check                               |
 | `pnpm hooks:run`                            | Lefthook over every file                  |

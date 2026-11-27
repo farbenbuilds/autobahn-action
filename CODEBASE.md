@@ -2,12 +2,16 @@
 
 ## Status
 
-The repository is in the setup phase. It contains the toolchain, the agent
-system, the skill library, and the environment definitions. The action
-runtime is deliberately absent until the implementation phase begins.
+Implementation is in progress. The runtime core is present: action input
+parsing and validation, shared report types, the fuzzingclient configuration
+builder, and Docker network and argument planning, each covered by unit tests.
+The action entry point, server lifecycle, suite execution, report parsing and
+summaries, artifact upload, `action.yml`, the committed bundle, and runtime
+workflows land in the remaining slices.
 
-When implementation starts, the module layout below is the planned boundary.
-Keep this document current when a module is added, renamed, or merged.
+The module layout below is the target boundary. Modules marked `present` are
+implemented now; the rest are landing next. Keep this document current when a
+module is added, renamed, or merged.
 
 ## Product Contract
 
@@ -29,47 +33,48 @@ The action must work with a server the consumer starts in a previous step and
 with a server the action starts itself. The second form is the one-step
 experience.
 
-## Planned Module Layout
+## Module Layout
 
 ```text
 src/
-  main.ts                     action entry point
+  main.ts                     landing next: action entry point
   action/
-    inputs.ts                 parse and validate action.yml inputs
-    outputs.ts                publish action outputs
-    run.ts                    orchestrate one suite run
+    inputs.ts                 present: parse and validate action.yml inputs
+    outputs.ts                landing next: publish action outputs
+    run.ts                    landing next: orchestrate one suite run
   domain/
-    autobahn.ts               named case and summary types
+    autobahn.ts               present: named case and summary types
   server/
-    start-server.ts           start and stop the consumer server
-    wait-for-server.ts        WebSocket handshake readiness probe
+    start-server.ts           landing next: start and stop the consumer server
+    wait-for-server.ts        landing next: WebSocket handshake readiness probe
   suite/
-    config.ts                 fuzzingclient.json construction
-    docker.ts                 URL mapping and Docker argument construction
-    run-suite.ts              run the container with a timeout
+    config.ts                 present: fuzzingclient.json construction
+    docker.ts                 present: URL mapping and Docker argument construction
+    run-suite.ts              landing next: run the container with a timeout
   report/
-    parse-report.ts           decode servers/index.json at the boundary
-    classify.ts               tolerate, classify, count, apply policy
-    format-summary.ts         render Markdown
-    write-report.ts           persist JSON, Markdown, and step summary
+    parse-report.ts           landing next: decode servers/index.json
+    classify.ts               landing next: tolerate, classify, count, and policy
+    format-summary.ts         landing next: render Markdown
+    write-report.ts           landing next: persist JSON, Markdown, step summary
   artifact/
-    upload-report.ts          enumerate regular files and upload one artifact
+    upload-report.ts          landing next: enumerate files and upload one artifact
 tests/
-  report/                     parser, classifier, and renderer tests
-  suite/                      config, URL mapping, and argument tests
-  server/                     readiness and lifecycle tests
-  action/                     input parsing and orchestration tests
+  report/                     landing next: parser, classifier, and renderer tests
+  suite/                      present: config, URL mapping, and argument tests
+  server/                     landing next: readiness and lifecycle tests
+  action/                     present: input parsing tests
 scripts/
-  build.mjs                   esbuild bundle of the action entry point
-  check-conventions.mjs       mechanical repository checks
-  integration-test.mjs        local Docker end-to-end check
+  build.mjs                   landing next: esbuild bundle of the entry point
+  check-conventions.mjs       present: mechanical repository checks
+  integration-test.mjs        landing next: local Docker end-to-end check
 dist/
-  index.cjs                   committed CommonJS release bundle
+  index.cjs                   landing next: committed CommonJS release bundle
 ```
 
-Runtime dependencies are `@actions/core` for the runner interface,
-`@actions/artifact` for report upload, and `zod` for boundary decoding.
-Subprocesses use `node:child_process` directly; tests use `node:test`. The
+Runtime dependencies are `@actions/core` for the runner interface and
+`@actions/artifact` for report upload. The report boundary decoder lands with
+the report pipeline and will use ArkType. Subprocesses use
+`node:child_process` directly; tests use `node:test`. The
 bundler is esbuild, not `@vercel/ncc`. The reasoning is in
 [ADR 0002](docs/adr/0002-action-runtime-toolchain.md) and
 [ADR 0003](docs/adr/0003-automatic-report-artifact-upload.md).
@@ -111,6 +116,8 @@ classification, and rendering stay pure so they are testable without Docker.
   caller's UID and GID so reports are readable.
 - Docker arguments are an array. Only `server-command` is intentionally a
   shell command supplied by the consumer.
+- Report and config mount paths are normalized, must be non-root, and must not
+  contain traversal.
 - Report JSON is untrusted. It is decoded into named types before use; a
   malformed report is an error, not an empty pass.
 - `NON-STRICT` is tolerated by default and can fail the run through policy.
@@ -138,8 +145,8 @@ The generated `fuzzingclient.json` mounts under `/reports`:
 ```json
 {
   "outdir": "/reports/servers",
-  "servers": [{ "agent": "autobahn-action", "url": "ws://127.0.0.1:9001" }],
-  "cases": ["*"],
+  "servers": [{ "agent": "autobahn-action", "url": "ws://127.0.0.1:9001/" }],
+  "cases": ["1.*", "2.*", "3.*", "4.*", "5.*", "6.*", "7.*", "9.*", "10.*"],
   "exclude-cases": [],
   "exclude-agent-cases": {}
 }
@@ -168,7 +175,9 @@ The outer key must match the `agent` input. A missing key is a hard error.
 
 `auto` uses host networking on Linux so a server bound to `127.0.0.1` is
 reachable. Elsewhere it uses bridge networking and maps a loopback target to
-`host.docker.internal`. Consumers can force either mode.
+`host.docker.internal`. Consumers can force either mode. A forced bridge
+container reaches a loopback server only when the server listens on the host
+gateway interface.
 
 ## Ownership
 

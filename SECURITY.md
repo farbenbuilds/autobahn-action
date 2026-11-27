@@ -2,8 +2,8 @@
 
 ## Supported Versions
 
-`autobahn-action` is in the setup phase. The action runtime and published
-version tags do not exist yet.
+The action runtime is in active development. Version 1.0.0 is the first
+release and has not been published yet.
 
 | Version        | Supported        |
 | -------------- | ---------------- |
