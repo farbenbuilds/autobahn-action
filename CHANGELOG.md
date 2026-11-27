@@ -25,8 +25,8 @@ All notable changes to this project are documented here. The format follows
   `.envrc` selection.
 - GitHub issue templates, pull request template, code of conduct, commit
   convention, funding metadata, and Dependabot configuration.
-- Agent parity checks, CODEOWNERS, EditorConfig, and ADR 0001 recording the
-  four-client decision.
+- Agent parity checks, CODEOWNERS, and ADR 0001 recording the four-client
+  decision.
 
 ### Notes
 

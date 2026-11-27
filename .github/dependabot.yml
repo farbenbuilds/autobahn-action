@@ -26,6 +26,11 @@ updates:
       time: "06:15"
       timezone: "Etc/UTC"
     open-pull-requests-limit: 5
+    ignore:
+      # Node type majors track runtime majors; the project targets Node 24.
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
     groups:
       npm-minor-patch:
         patterns:
