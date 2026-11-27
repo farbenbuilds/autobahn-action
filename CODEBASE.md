@@ -204,8 +204,8 @@ gateway interface.
 
 The report directory is uploaded after the summary files are written, on the
 success, policy-failure, and pre-report failure paths. The upload is skipped
-with a warning outside GitHub Actions, when `ACTIONS_RUNTIME_TOKEN` or
-`ACTIONS_RESULTS_URL` is missing, when the input is disabled, when no regular
+with an informational log outside GitHub Actions, when `ACTIONS_RUNTIME_TOKEN`
+or `ACTIONS_RESULTS_URL` is missing, when the input is disabled, when no regular
 files exist, or on an unsupported GHES host. An upload failure is a warning and
 never rewrites the protocol result. The action enumerates regular files with
 `lstat` and does not follow symlinks. The runtime token and result URL are

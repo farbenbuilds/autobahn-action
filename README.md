@@ -114,9 +114,10 @@ the server must listen on a container-reachable interface, not only on
 
 The report directory is uploaded as the `autobahn-report` artifact after the
 summary is written, including on the failure path. The upload uses the
-runner-provided runtime token, needs no repository secret, and is skipped with a
-warning outside Actions or on unsupported GHES hosts. The workflow needs
-`contents: read` only. Use a unique `artifact-name` for each matrix job.
+runner-provided runtime token, needs no repository secret, and expected skips
+are logged at informational level outside Actions or on unsupported GHES hosts.
+An upload failure is logged as a warning. The workflow needs `contents: read`
+only. Use a unique `artifact-name` for each matrix job.
 
 ## Development
 
@@ -145,7 +146,7 @@ The action uses `@actions/core`, `@actions/artifact`, `arktype` 2.2.10,
 The harness follows
 [fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js)
 (Apache-2.0) for the configuration shape, default case selection, and flow. No
-upstream source is vendored. The suite itself is the
-[Autobahn testsuite](https://github.com/crossbario/autobahn-testsuite). MIT
-licensed; see [LICENSE](LICENSE) and
+upstream source is vendored. The suite is the
+[Autobahn testsuite](https://github.com/crossbario/autobahn-testsuite), which is
+Apache-2.0. This action is MIT licensed under [LICENSE](LICENSE); see
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

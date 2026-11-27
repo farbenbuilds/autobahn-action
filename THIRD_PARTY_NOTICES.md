@@ -27,6 +27,13 @@ The plugin is installed and updated through the `install-anti-slop` skill.
   TypeScript implementation; only configuration values and behavioral
   expectations are referenced.
 
+## Test Suite Image
+
+- Source: https://github.com/crossbario/autobahn-testsuite
+- License: Apache-2.0
+- Distribution: the digest-pinned Docker image is executed at runtime and is
+  not vendored in this repository.
+
 ## Installed Skills
 
 Skills under `.agents/skills/` are pinned by `skills-lock.json`. Each upstream
