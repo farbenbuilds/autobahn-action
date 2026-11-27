@@ -107,8 +107,10 @@ pnpm hooks:install
 nix flake check
 ```
 
-`.envrc` selects the default glibc shell or the musl shell automatically. Both
-shells provide Node, pnpm, TypeScript, lefthook, and the formatters.
+`.envrc` loads the glibc shell automatically. On a musl host it uses the system
+Node and pnpm when present so the first load stays fast; run
+`nix develop .#musl` for the pinned musl shell. Both shells provide Node, pnpm,
+TypeScript, lefthook, and the formatters.
 
 | Command                                     | Purpose                                   |
 | ------------------------------------------- | ----------------------------------------- |
