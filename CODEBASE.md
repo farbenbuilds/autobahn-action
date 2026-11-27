@@ -2,17 +2,16 @@
 
 ## Status
 
-Implementation is in progress. The runtime core is present: action input
-parsing and validation, shared report types, the fuzzingclient configuration
-builder, Docker network and argument planning, and the report pipeline that
-decodes, classifies, and summarizes the suite output, each covered by unit
-tests. The action entry point, server lifecycle, suite execution, report
-persistence, artifact upload, `action.yml`, the committed bundle, and runtime
-workflows land in the remaining slices.
+Implementation is in progress. The runtime is implemented: action input
+parsing, server lifecycle and readiness probing, Docker planning and suite
+execution, report persistence, summary rendering, artifact upload, outputs,
+annotations, and the orchestration entry point, each covered by unit tests.
+`action.yml` and the committed `dist/index.cjs` bundle are present. The runtime
+workflows, the local Docker self-test, and the final documentation pass remain.
 
-The module layout below is the target boundary. Modules marked `present` are
-implemented now; the rest are landing next. Keep this document current when a
-module is added, renamed, or merged.
+The module layout below is the implemented boundary. Modules marked `present`
+are implemented now; the rest are landing next. Keep this document current when
+a module is added, renamed, or merged.
 
 ## Product Contract
 
@@ -37,39 +36,47 @@ experience.
 ## Module Layout
 
 ```text
+action.yml                    present: public input and output contract
 src/
-  main.ts                     landing next: action entry point
+  main.ts                     present: action entry point and failure boundary
   action/
     inputs.ts                 present: parse and validate action.yml inputs
-    outputs.ts                landing next: publish action outputs
-    run.ts                    landing next: orchestrate one suite run
+    outputs.ts                present: format and publish action outputs
+    annotate.ts               present: failure and non-strict annotations
+    run.ts                    present: orchestrate one suite run
+    run-report.ts             present: summarize, upload, and finish a run
   domain/
     autobahn.ts               present: named case and summary types
   server/
-    start-server.ts           landing next: start and stop the consumer server
-    wait-for-server.ts        landing next: WebSocket handshake readiness probe
+    start-server.ts           present: start and stop the consumer server
+    wait-for-server.ts        present: WebSocket handshake readiness probe
   suite/
     config.ts                 present: fuzzingclient.json construction
     docker.ts                 present: URL mapping and Docker argument construction
-    run-suite.ts              landing next: run the container with a timeout
+    run-suite.ts              present: run the container with a timeout
   report/
+    paths.ts                  present: resolve report and summary paths
+    prepare-report-dir.ts     present: guard, reset, and create the report tree
     parse-report.ts           present: decode servers/index.json
     classify.ts               present: classify, count, and apply policy
     format-summary.ts         present: build the summary document and Markdown
-    write-report.ts           landing next: persist JSON, Markdown, step summary
+    write-report.ts           present: persist JSON, Markdown, step summary
   artifact/
-    upload-report.ts          landing next: enumerate files and upload one artifact
+    upload-report.ts          present: enumerate files and upload one artifact
 tests/
-  report/                     present: parser, classifier, and renderer tests
-  suite/                      present: config, URL mapping, and argument tests
-  server/                     landing next: readiness and lifecycle tests
-  action/                     present: input parsing tests
+  report/                     present: parser, classifier, renderer, guard, and writer tests
+  suite/                      present: config, URL mapping, argument, and run tests
+  server/                     present: readiness, lifecycle, and process-group tests
+  action/                     present: input, output, annotation, and run tests
+  artifact/                   present: skip, URL, file enumeration, and exclusion tests
+  fixtures/
+    echo-server.mjs           present: WebSocket echo server for the self-test
 scripts/
-  build.mjs                   landing next: esbuild bundle of the entry point
+  build.mjs                   present: esbuild bundle of the entry point
   check-conventions.mjs       present: mechanical repository checks
   integration-test.mjs        landing next: local Docker end-to-end check
 dist/
-  index.cjs                   landing next: committed CommonJS release bundle
+  index.cjs                   present: committed CommonJS release bundle
 ```
 
 Runtime dependencies are `@actions/core` for the runner interface,
@@ -89,6 +96,8 @@ count, and never add a numbered continuation file.
 action.yml
   -> action/inputs.ts            validated ActionInputs
   -> action/run.ts               owns the run timeline
+       -> report/paths           report, config, and summary paths
+       -> report/prepare-report  guarded fresh report tree
        -> server/start-server    optional child process group
        -> server/wait-for-server WebSocket handshake
        -> suite/config           fuzzingclient.json
@@ -96,14 +105,18 @@ action.yml
        -> suite/run-suite        container lifecycle
        -> report/parse-report    validated case records
        -> report/classify        outcomes, counts, policy
-       -> report/format-summary  Markdown
+       -> report/format-summary  Markdown and failure document
        -> report/write-report    JSON, Markdown, step summary
+       -> action/annotate        failed and non-strict annotations
        -> artifact/upload        @actions/artifact report archive
+  -> action/run-report.ts        failure and policy completion
   -> action/outputs.ts           GitHub outputs
 ```
 
 The run timeline is the only place that sequences effects. Parsing,
 classification, and rendering stay pure so they are testable without Docker.
+The JSON and Markdown files are written before the artifact upload, and the
+artifact result never changes the protocol outcome.
 
 ## Invariants
 
@@ -119,19 +132,26 @@ classification, and rendering stay pure so they are testable without Docker.
   shell command supplied by the consumer.
 - Report and config mount paths are normalized, must be non-root, and must not
   contain traversal.
+- Symlinks are rejected for report directories inside the workspace. External
+  absolute report paths are canonicalized, as are the workspace and home
+  references, and must not resolve into either protected location; the final
+  component may not be a symlink. This keeps platform prefixes such as macOS
+  `/var` usable.
 - Report JSON is untrusted. It is decoded into named types before use; a
   malformed report is an error, not an empty pass.
 - `NON-STRICT` is tolerated by default and can fail the run through policy.
   `INFORMATIONAL` is tolerated because the suite uses it for cases that do not
   assert protocol behavior.
-- A suite failure writes no passing summary. The action fails with the docker
-  or readiness error.
+- A suite failure writes no passing summary. A partial report is preserved with
+  the suite error and uploaded as evidence; a missing or malformed report writes
+  a failed summary with zero counts.
 - The Markdown report is appended to `GITHUB_STEP_SUMMARY` only when the
   summary input is enabled and the path exists.
-- The report directory is uploaded as one immutable artifact after the summary
-  is written, including when the policy fails. The upload is skipped with a
-  warning outside Actions or on GHES, where the v2 artifact backend is not
-  available.
+- Report and summary files are uploaded as one immutable artifact after the
+  summary is written, including when the policy fails. The generated
+  fuzzingclient.json stays local because its target URL can contain a token.
+  The upload is skipped with a warning outside Actions or on GHES, where the v2
+  artifact backend is not available.
 - Artifact names must be unique in a workflow run. Matrix consumers override
   the default `autobahn-report` name per job.
 - An artifact upload failure is a warning in the summary; it never rewrites

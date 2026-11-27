@@ -43,12 +43,21 @@ All notable changes to this project are documented here. The format follows
 - Report pipeline: ArkType-validated `servers/index.json` decoding, natural
   case ordering, failure classification under all three policies, and
   deterministic summary document and Markdown rendering.
+- Action runtime: managed server lifecycle, WebSocket handshake readiness,
+  timed suite execution with container cleanup, guarded report directory reset,
+  JSON and Markdown persistence, step summary, annotations, and failure
+  summaries.
+- Automatic report artifact upload with skip handling for non-Actions runners,
+  missing runtime configuration, and unsupported GitHub Enterprise Server hosts.
+- Action contract in `action.yml` with every input, default, and output, the
+  Node 24 entry point, and the committed `dist/index.cjs` esbuild bundle.
+- esbuild 0.28.2 and `ws` 8.23.1 as development dependencies, plus a WebSocket
+  echo server fixture for the self-test.
 
 ### Notes
 
-- The runtime is under active implementation. `action.yml`, the action entry
-  point, `dist/`, report persistence, and the Autobahn self-test workflow land
-  in the remaining slices.
+- The action runtime is implemented. The runtime self-test workflow, release
+  metadata, and the final documentation pass remain.
 
 ## [0.1.0] - 2026-11-28
 

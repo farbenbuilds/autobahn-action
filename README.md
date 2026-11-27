@@ -7,13 +7,13 @@ from a GitHub Actions workflow.
 
 ## Status
 
-The runtime is under active implementation. The action input, configuration,
-Docker planning core, report parser, classifier, and Markdown summary have
-landed with unit tests, but this is not yet a consumable action. `action.yml`,
-the runtime entry point, report persistence, the committed bundle, and the
-Autobahn workflow land in the remaining implementation slices.
+The action runtime is implemented: `action.yml`, the orchestration entry point,
+server lifecycle and readiness probing, suite execution, report persistence,
+summary rendering, annotations, outputs, and automatic artifact upload. The
+committed `dist/index.cjs` bundle is present. The runtime self-test workflow,
+release metadata, and the final documentation pass remain.
 
-The planned consumer experience is one step:
+The consumer experience is one step:
 
 ```yaml
 name: Autobahn
@@ -48,7 +48,7 @@ digest-pinned Autobahn container, parse `servers/index.json`, write JSON and
 Markdown summaries, append the report to the job summary, annotate failures,
 and fail according to the configured policy.
 
-## Planned Inputs
+## Inputs
 
 | Input                      | Default                    | Purpose                                   |
 | -------------------------- | -------------------------- | ----------------------------------------- |
@@ -70,7 +70,7 @@ and fail according to the configured policy.
 | `artifact-name`            | `autobahn-report`          | Artifact name; unique per run             |
 | `retention-days`           | `30`                       | Artifact retention; `0` uses repo default |
 
-## Planned Outputs
+## Outputs
 
 `ok`, `outcome`, `total`, `passed`, `failed`, `non-strict`, `informational`,
 `policy`, `report-dir`, `index-path`, `summary-path`, `markdown-path`,
@@ -105,9 +105,21 @@ Requirements: Node.js 24 or newer, pnpm 12.4.2, and optionally Nix and Docker.
 ```sh
 pnpm install
 pnpm check
+pnpm build
 pnpm hooks:install
 nix flake check
 ```
+
+`pnpm build` writes `dist/index.cjs`; rebuild and diff it before review. The
+self-test fixture starts a WebSocket echo server for the runtime workflow:
+
+```sh
+node tests/fixtures/echo-server.mjs --host 127.0.0.1 --port 9001
+node dist/index.cjs
+```
+
+The second command needs Docker and the action inputs supplied by the runner or
+environment. The full self-test workflow lands with the CI slice.
 
 `.envrc` selects the default glibc shell or the musl shell automatically. The
 musl shell keeps only the cached Node and pnpm closure, so a musl host reuses
@@ -122,6 +134,7 @@ the formatters. Lefthook is installed by pnpm.
 | `pnpm lint:fix`                             | Safe Oxlint fixes                         |
 | `pnpm typecheck`                            | TypeScript check                          |
 | `pnpm test`                                 | Unit tests with `node:test`               |
+| `pnpm build`                                | Bundle the action to `dist/index.cjs`     |
 | `pnpm verify`                               | Check, typecheck, and tests               |
 | `pnpm format`                               | Oxfmt write                               |
 | `pnpm format:check`                         | Oxfmt check                               |

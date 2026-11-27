@@ -20,6 +20,7 @@ pre-commit:
         - ".claude/**"
         - ".codex/**"
         - ".opencode/**"
+        - "dist/**"
         - "node_modules/**"
         - "tools/oxlint/anti-slop/**"
       run: pnpm exec oxlint --fix {staged_files}
@@ -32,11 +33,24 @@ pre-commit:
         - ".claude/**"
         - ".codex/**"
         - ".opencode/**"
+        - "dist/**"
         - "node_modules/**"
         - "tools/oxlint/anti-slop/**"
         - "pnpm-lock.yaml"
       run: pnpm exec oxfmt {staged_files}
       stage_fixed: true
+
+    - name: build
+      glob: "{src/**/*.ts,scripts/build.mjs,package.json,pnpm-lock.yaml}"
+      run: pnpm build && git add dist/index.cjs
+
+    - name: typecheck
+      glob: "{src/**/*.ts,tests/**/*.ts,scripts/**/*.mjs,tsconfig.json,package.json}"
+      run: pnpm typecheck
+
+    - name: test
+      glob: "{src/**/*.ts,tests/**/*.ts,scripts/build.mjs,package.json}"
+      run: pnpm test
 
     - name: conventions
       run: node scripts/check-conventions.mjs

@@ -70,3 +70,14 @@ binary is a development tool and is not distributed with this repository.
 including the Actions HTTP client, Octokit, and the Azure Blob Storage client.
 Their licenses are recorded in `pnpm-lock.yaml` and remain upstream MIT or
 Apache-2.0 material; no vendored source is added here.
+
+## Development Dependencies
+
+| Package     | Version | License | Purpose                                    |
+| ----------- | ------- | ------- | ------------------------------------------ |
+| `esbuild`   | 0.28.2  | MIT     | Bundle `src/main.ts` into `dist/index.cjs` |
+| `ws`        | 8.23.1  | MIT     | WebSocket echo server fixture and tests    |
+| `@types/ws` | 8.18.2  | MIT     | Type declarations for the fixture          |
+
+Development dependencies are not distributed with the action. `esbuild` output
+in `dist/index.cjs` contains bundled runtime dependencies, not the build tool.

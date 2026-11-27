@@ -101,6 +101,30 @@ function formatCountsTable(counts: ReportCounts): string[] {
   ];
 }
 
+export function buildFailureSummaryDocument(
+  agent: string,
+  generatedAt: string,
+  policy: FailurePolicy,
+  error: string,
+): SummaryDocument {
+  return {
+    schemaVersion: 1,
+    agent,
+    generatedAt,
+    policy,
+    outcome: "failed",
+    counts: {
+      total: 0,
+      passed: 0,
+      failed: 0,
+      nonStrict: 0,
+      informational: 0,
+    },
+    cases: [],
+    error,
+  };
+}
+
 export function formatSummaryMarkdown(document: SummaryDocument): string {
   const failedCases = document.cases.filter((reportCase) => reportCase.status === "failed");
 

@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { classifyReport } from "../../src/report/classify.ts";
-import { buildSummaryDocument, formatSummaryMarkdown } from "../../src/report/format-summary.ts";
+import {
+  buildFailureSummaryDocument,
+  buildSummaryDocument,
+  formatSummaryMarkdown,
+} from "../../src/report/format-summary.ts";
 
 import type { FailurePolicy, ReportCase } from "../../src/domain/autobahn.ts";
 import type { SummaryDocument } from "../../src/report/format-summary.ts";
@@ -70,6 +74,34 @@ describe("buildSummaryDocument", () => {
 
     assert.deepEqual(first, second);
     assert.equal(formatSummaryMarkdown(first), formatSummaryMarkdown(second));
+  });
+});
+
+describe("buildFailureSummaryDocument", () => {
+  it("records a failed outcome with zero counts and the error", () => {
+    const document = buildFailureSummaryDocument(
+      AGENT,
+      GENERATED_AT,
+      "non-strict",
+      "report is missing",
+    );
+
+    assert.equal(document.outcome, "failed");
+    assert.equal(document.policy, "non-strict");
+    assert.equal(document.error, "report is missing");
+    assert.deepEqual(document.counts, {
+      total: 0,
+      passed: 0,
+      failed: 0,
+      nonStrict: 0,
+      informational: 0,
+    });
+    assert.deepEqual(document.cases, []);
+
+    const markdown = formatSummaryMarkdown(document);
+
+    assert.match(markdown, /Result: failed\. Policy: non-strict\./u);
+    assert.match(markdown, /Error: report is missing/u);
   });
 });
 

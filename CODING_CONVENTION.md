@@ -62,6 +62,7 @@ Reviewers reject a change that violates them instead of negotiating them.
   represent mutually exclusive states.
 - Name every value that crosses a function boundary. Do not use broad `object`
   parameters or `Record<string, unknown>` as a domain contract.
+- Use plain records and arrays in domain types.
 - Export explicit return types from module boundaries. Local inference is
   fine.
 

@@ -15,9 +15,9 @@ The action will start the server under test, run the digest-pinned
 `crossbario/autobahn-testsuite` image, read the report, write a JSON and
 Markdown summary, annotate failures, and exit with the configured policy.
 
-Implementation is in progress. The input, configuration, Docker planning, and
-report pipeline modules are present; `action.yml`, the runtime entry point, the
-committed bundle, and the runtime workflows land in the remaining slices.
+Implementation is in progress. The runtime, `action.yml`, and the committed
+`dist/index.cjs` bundle are present; the runtime workflows, the local Docker
+self-test, and the final documentation pass land in the remaining slices.
 
 ## Documentation Map
 
@@ -92,8 +92,15 @@ sh scripts/check-agent-parity.sh
 sh scripts/check-graphify-integrations.sh
 ```
 
-Implementation changes will additionally run `pnpm build`, `pnpm typecheck`,
-`pnpm test`, and the action self-test workflow once those exist.
+Implementation changes also run:
+
+```sh
+pnpm build
+pnpm typecheck
+pnpm test
+```
+
+The runtime self-test workflow lands with the CI slice.
 
 ## Agent Team
 
