@@ -58,12 +58,17 @@ tests/
   server/                     readiness and lifecycle tests
   action/                     input parsing and orchestration tests
 scripts/
-  build.mjs                   bundle the action entry point
+  build.mjs                   esbuild bundle of the action entry point
   check-conventions.mjs       mechanical repository checks
   integration-test.mjs        local Docker end-to-end check
 dist/
-  index.cjs                   committed release bundle
+  index.cjs                   committed CommonJS release bundle
 ```
+
+Runtime dependencies are `@actions/core` for the runner interface and `zod`
+for boundary decoding. Subprocesses use `node:child_process` directly; tests
+use `node:test`. The bundler is esbuild, not `@vercel/ncc`. The reasoning is in
+[ADR 0002](docs/adr/0002-action-runtime-toolchain.md).
 
 Every module stays below 500 lines. Split by responsibility, not by line
 count, and never add a numbered continuation file.
