@@ -75,6 +75,12 @@ and fail according to the configured policy.
 
 ## Design Notes
 
+Runtime choices: `@actions/core` for the runner interface, `zod` for untrusted
+report decoding, `node:child_process` for explicit subprocess control,
+`node:test` for tests, and esbuild for the committed bundle. There is no
+`@actions/exec`, no `@actions/artifact`, and no `@vercel/ncc`. See
+[docs/adr/0002-action-runtime-toolchain.md](docs/adr/0002-action-runtime-toolchain.md).
+
 The harness takes its shape from
 [fastwebsockets/server-test.js](https://github.com/denoland/fastwebsockets/blob/main/autobahn/server-test.js):
 start an echo server, run the fuzzing client with the suite image, read

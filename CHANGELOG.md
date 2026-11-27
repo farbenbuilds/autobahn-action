@@ -27,6 +27,9 @@ All notable changes to this project are documented here. The format follows
   convention, funding metadata, and Dependabot configuration.
 - Agent parity checks, CODEOWNERS, and ADR 0001 recording the four-client
   decision.
+- ADR 0002 recording the action runtime toolchain: `@actions/core` and `zod`
+  as dependencies, direct `node:child_process`, `node:test`, esbuild, and no
+  `@actions/exec`, `@actions/artifact`, or `@vercel/ncc`.
 
 ### Notes
 
